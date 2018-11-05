@@ -47,8 +47,8 @@ library(keras)
 model <- keras_model_sequential() 
 model %>% 
   layer_dense(units = 2048, activation = 'relu', input_shape = c(101)) %>% 
-  layer_dense(units = 1024, activation = 'relu', input_shape = c(101)) %>%
-  layer_dense(units = 1024, activation = 'relu', input_shape = c(101)) %>% 
+  layer_dense(units = 1024, activation = 'relu') %>%
+  layer_dense(units = 1024, activation = 'relu') %>% 
   layer_dense(units = 512, activation = 'relu') %>%
   layer_dense(units = 512, activation = 'relu') %>%
   layer_dense(units = 256, activation = 'relu') %>%

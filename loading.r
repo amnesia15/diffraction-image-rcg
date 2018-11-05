@@ -92,23 +92,9 @@ for (i in 1:100) {
   max_values_img <- c(max_values_img, max(DIFSLIKA[[i]]$V3))
 }
 
-hist(DIFSLIKA[[1]]$V3)
-
 # writing matrices to files
 
 for (i in 1:251) {
   str_path <- paste("Desktop/image_matrix/SLIKA", i, ".txt", sep = "")
   write.table(IMG_MAT[[i]], file = str_path, row.names = FALSE, col.names = FALSE)
 }
-
-x_value <- c()
-y_value <- c()
-
-for (i in 1:251) {
-  x_value <- c(x_value, as.double(PARAM[[i]][1]))
-  y_value <- c(y_value, as.double(PARAM[[i]][2]))
-}
-
-ggplot(mapping = aes(x = x_value, y = y_value)) + geom_point(shape = 18, color = "blue") + 
-  xlab("R (nm)") + ylab("H (nm)")
-
