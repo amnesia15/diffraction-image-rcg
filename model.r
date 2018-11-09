@@ -38,9 +38,6 @@ test_data <- data_x[-training_indices, ]
 train_labels <- data_labels[training_indices, ]
 test_labels <- data_labels[-training_indices, ]
 
-#train_data <- array_reshape(train_data, c(nrow(train_data), 201 * 201))
-#test_data <- array_reshape(test_data, c(nrow(test_data), 201 * 201))
-
 
 library(keras)
 
@@ -65,7 +62,7 @@ model %>% compile(
 history <- model %>% fit(
   train_data,
   train_labels,
-  epochs = 100,
+  epochs = 200,
   validation_split = 0.2
 )
 

@@ -25,7 +25,7 @@ x_unique <- unique(x_value)
 y_unique <- unique(y_value)
 z_matrix <- array(, dim = c(length(unique(x_value)), length(unique(y_value))))
 
-for (i in 1:251) {
+for (i in 1:100) {
   i_ind <- which(x_value[i] == x_unique)
   j_ind <- which(y_value[i] == y_unique)
   
@@ -58,3 +58,6 @@ color_value <- sapply(color_value, function(x) ifelse(x >= 2, 1, 0))
 
 ggplot(mapping = aes(x = x_value, y = y_value, color = color_value)) + 
   geom_point() + geom_abline(slope = 99/40, intercept = -2375) + scale_x_continuous(limits = c(0, 5000))
+
+
+for (i in 1:100)
