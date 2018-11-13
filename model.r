@@ -62,7 +62,7 @@ model %>% compile(
 history <- model %>% fit(
   train_data,
   train_labels,
-  epochs = 200,
+  epochs = 1,
   validation_split = 0.2
 )
 
@@ -70,5 +70,3 @@ model %>% evaluate(test_data, test_labels)
 
 predicted <- model %>% predict(test_data)
 predicted <- cbind(predicted, test_labels)
-
-
