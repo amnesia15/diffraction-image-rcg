@@ -59,7 +59,7 @@ for (i in 1:251) {
 
 max(DIFSLIKA[[5]]$V3)
 
-image(IMG_MAT[[31]], useRaster = TRUE, axes = TRUE, col = gray((0:65536)/65536))
+image(IMG_MAT[[1]], useRaster = TRUE, axes = TRUE, col = gray((0:65536)/65536))
 
 
 # loading INPUT files 
