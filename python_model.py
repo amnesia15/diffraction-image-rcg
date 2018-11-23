@@ -5,6 +5,7 @@ from keras.models import Sequential
 from keras.layers.core import Dense
 from keras.optimizers import RMSprop
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 
 dir_imgs = '/home/amnesia/Desktop/1000_imgs/'
 
@@ -43,11 +44,29 @@ model.compile(loss='mse', optimizer=RMSprop(), metrics=["mean_absolute_error"])
 
 print('[INFO] training model...')
 
-model.fit(trainX, trainY, validation_split=0.2, epochs=30)
+mae_test = []
+mae_train = []
+mae_cv = []
 
+for i in range(0, 30):
+    H = model.fit(trainX, trainY, validation_split=0.2, epochs=1)
+    mae_train.append(H.history['mean_absolute_error'])
+    mae_cv.append(H.history['val_mean_absolute_error'])
+    mae_test.append(model.evaluate(testX, testY)[1])
 
 loss_and_metrics = model.evaluate(testX, testY)
 
-print(loss_and_metrics)
 
+print('[INFO] ploting mean absolute error...')
+epochs = np.arange(0, 30)
+plt.style.use("ggplot")
+plt.figure()
+plt.plot(epochs, mae_train, label = "mean_absolute_error_train")
+plt.plot(epochs, mae_cv, label = "mean_absolute_error_cv")
+plt.plot(epochs, mae_test, label = "mean_absolute_error_test")
+plt.title("Mean absolute error (training, cv, test)")
+plt.xlabel("Epoch")
+plt.ylabel("Mean absolute error")
+plt.legend()
+plt.savefig("plot.png")
 
