@@ -67,16 +67,16 @@ PARAM <- vector("list", 100)
 for (i in 1:100) {
   str_path = paste("Desktop/master/input", i, "/INPUT.TXT", sep = "")
   res <- readLines(str_path)
-  res[0] <- as.double(res[0])
-  res[1] <- as.double(res[1])
+  res[0] <- as.double(res[1])
+  res[1] <- as.double(res[2])
   PARAM[[i]] <- res
 }
 
 for (i in 1:151) {
   str_path = paste("Desktop/new_cluster/input", i, "/INPUT.TXT", sep = "")
   res <- readLines(str_path)
-  res[0] <- as.double(res[0])
-  res[1] <- as.double(res[1])
+  res[0] <- as.double(res[1])
+  res[1] <- as.double(res[2])
   PARAM[[i + 100]] <- res
 }
 
