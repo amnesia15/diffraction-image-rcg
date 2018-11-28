@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from keras.optimizers import Adam
 from keras.utils import plot_model
+from keras.initializers import glorot_normal
 
 dir_imgs = '/home/amnesia/Desktop/1000_imgs/'
 
@@ -36,15 +37,14 @@ trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.3,
 
 
 model = Sequential()
-model.add(Dense(units = 101, activation = 'relu', input_dim = 101))
-model.add(Dense(units = 101, activation = 'relu'))
-model.add(Dense(units = 50, activation = 'relu'))
-model.add(Dense(units = 50, activation = 'relu'))    
-model.add(Dense(units = 25, activation = 'relu'))
-model.add(Dense(units = 2))
+model.add(Dense(units = 101, kernel_initializer = glorot_normal(), activation = 'relu', input_dim = 101))
+model.add(Dense(units = 101, kernel_initializer = glorot_normal(), activation = 'relu'))
+model.add(Dense(units = 50, kernel_initializer = glorot_normal(), activation = 'relu'))
+model.add(Dense(units = 50, kernel_initializer = glorot_normal(), activation = 'relu'))    
+model.add(Dense(units = 25, kernel_initializer = glorot_normal(), activation = 'relu'))
+model.add(Dense(units = 2, kernel_initializer = glorot_normal()))
 
-
-model.compile(loss='mse', optimizer=Adam(lr=0.00001), metrics=["mean_absolute_error"])
+model.compile(loss='mse', optimizer=RMSprop(lr=0.00001), metrics=["mean_absolute_error"])
 
 
 print('[INFO] training model...')
@@ -53,7 +53,7 @@ mae_test = []
 mae_train = []
 mae_cv = []
 
-EPOCHS = 4500
+EPOCHS = 6500
 
 for i in range(0, EPOCHS):
     H = model.fit(trainX, trainY, validation_split=0.2, epochs=1)
