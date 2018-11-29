@@ -32,7 +32,7 @@ params = np.array(params)
 
 print("[INFO] creating models")
 
-data_x = data[ : ,101, 100:201]
+data_x = data[ : ,100, 100:201]
 trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.3, random_state = 42)
 
 

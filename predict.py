@@ -2,16 +2,18 @@ from keras.models import load_model
 import cv2
 import argparse
 import numpy as np
+from finding_center import get_image_for_model
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-p', '--path', required = True,
-    help = 'path to image')
+    help = 'path to load image')
 args = vars(ap.parse_args())
 
 
 print('[INFO] loading image...')
 image = cv2.imread(args['path'], cv2.IMREAD_GRAYSCALE)
-input_x = image[101, 100:201]
+image = get_image_for_model(image)
+input_x = image[100, 100:201]
 input_x = np.reshape(input_x, (1, 101))
 
 print('[INFO] loading model...')
@@ -27,5 +29,5 @@ output = image.copy()
 cv2.putText(output, text, (15, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.4,
    (255, 255, 0), 1)
 cv2.imshow("Image", output)
-cv2.waitKey(5000)
+cv2.waitKey()
 
