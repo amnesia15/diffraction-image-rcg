@@ -1,6 +1,5 @@
 import cv2
 import argparse
-import numpy as np
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-p', '--path', required = True,
@@ -10,7 +9,7 @@ args = vars(ap.parse_args())
 
 def find_center(image):
     # convert the grayscale image to binary image
-    ret,thresh = cv2.threshold(image,1,255,0)
+    thresh = cv2.threshold(image,1,255,0)[1]
 
     # calculate moments of binary image
     M = cv2.moments(thresh)

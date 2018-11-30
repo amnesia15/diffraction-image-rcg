@@ -33,7 +33,7 @@ params = np.array(params)
 print("[INFO] creating models")
 
 data_x = data[ : ,100, 100:201]
-trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.3, random_state = 42)
+trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.2, random_state = 42)
 
 
 model = Sequential()
@@ -44,7 +44,7 @@ model.add(Dense(units = 50, kernel_initializer = glorot_normal(), activation = '
 model.add(Dense(units = 25, kernel_initializer = glorot_normal(), activation = 'relu'))
 model.add(Dense(units = 2, kernel_initializer = glorot_normal()))
 
-model.compile(loss='mse', optimizer=RMSprop(lr=0.00001), metrics=["mean_absolute_error"])
+model.compile(loss='mse', optimizer=Adam(lr=0.00001), metrics=["mean_absolute_error"])
 
 
 print('[INFO] training model...')
@@ -53,13 +53,18 @@ mae_test = []
 mae_train = []
 mae_cv = []
 
-EPOCHS = 6500
+loss_train = []
+loss_cv = []
+
+EPOCHS = 5000
 
 for i in range(0, EPOCHS):
-    H = model.fit(trainX, trainY, validation_split=0.2, epochs=1)
+    H = model.fit(trainX, trainY, validation_split=0.25, epochs=1)
     mae_train.append(H.history['mean_absolute_error'])
     mae_cv.append(H.history['val_mean_absolute_error'])
     mae_test.append(model.evaluate(testX, testY)[1])
+    loss_train.append(H.history['loss'])
+    loss_cv.append(H.history['val_loss'])
 
 loss_and_metrics = model.evaluate(testX, testY)
 
@@ -87,22 +92,36 @@ predictions = model.predict(testX)
 predictions = np.hstack((predictions, testY))
 np.savetxt('model_output/predictions.txt', predictions, delimiter='     ', fmt='%.2f')
 
+
+print('[INFO] ploting scatter plot of predictions...')
 plt.figure()
 plt.plot(testY[:, 0], predictions[:, 0], 'b.', markersize = 1)
 plt.plot([1000, 5000], [1000, 5000], 'r')
-plt.xlim((1000, 5000))
-plt.ylim((1000, 5000))
+plt.xlim((500, 5500))
+plt.ylim((500, 5500))
 plt.xlabel('Real R')
 plt.ylabel('Predicted R')    
 plt.title("Predicted vs Real R")
 plt.legend()
 plt.savefig('model_output/pred_vs_realR.png')
+
+plt.figure()
 plt.plot(testY[:,1], predictions[:, 1], 'b.', markersize = 1)
 plt.plot([100, 10000], [100, 10000], 'r')
-plt.xlim((100, 10000))
-plt.ylim((100, 10000))
+plt.xlim((-400, 10500))
+plt.ylim((-400, 10500))
 plt.xlabel('Real H')
 plt.ylabel('Predicted H')
 plt.title("Predicted vs Real H")
 plt.legend()
 plt.savefig('model_output/pred_vs_realH.png')
+
+print('[INFO] ploting loss...')
+plt.figure()
+plt.plot(epochs, loss_train, label = 'loss_training')
+plt.plot(epochs, loss_cv, label = 'loss_cv')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title("Loss function (training, cv)")
+plt.legend()
+plt.savefig('model_output/loss_func.png')
