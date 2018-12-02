@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from keras.optimizers import Adam
 from keras.utils import plot_model
 from keras.initializers import glorot_normal
+from keras.layers.core import Dropout
+from nn_model import NNModel
 
 dir_imgs = '/home/amnesia/Desktop/1000_imgs/'
 
@@ -30,22 +32,15 @@ for i in range(0, 1000):
 data = np.array(data)
 params = np.array(params)
 
-print("[INFO] creating models")
+print("[INFO] creating model...")
 
 data_x = data[ : ,100, 100:201]
 trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.2, random_state = 42)
 
 
-model = Sequential()
-model.add(Dense(units = 101, kernel_initializer = glorot_normal(), activation = 'relu', input_dim = 101))
-model.add(Dense(units = 101, kernel_initializer = glorot_normal(), activation = 'relu'))
-model.add(Dense(units = 50, kernel_initializer = glorot_normal(), activation = 'relu'))
-model.add(Dense(units = 50, kernel_initializer = glorot_normal(), activation = 'relu'))    
-model.add(Dense(units = 25, kernel_initializer = glorot_normal(), activation = 'relu'))
-model.add(Dense(units = 2, kernel_initializer = glorot_normal()))
+model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101)
 
-model.compile(loss='mse', optimizer=Adam(lr=0.00001), metrics=["mean_absolute_error"])
-
+model.summary()
 
 print('[INFO] training model...')
 
