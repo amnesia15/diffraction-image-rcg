@@ -59,7 +59,8 @@ class NNModel():
     # n * 2
     # no_iter[0] = (high[1]-low[1]) * ... * (low[low.size] - low[low.size])
     @staticmethod
-    def generate_combination_low_high_different(depth, low_high_arr):
+    def generate_combination_low_high_different(low_high_arr):
+        depth = low_high_arr.shape[0]
         comb_list = []
 
         size = low_high_arr[0, 1] - low_high_arr[0, 0] + 1

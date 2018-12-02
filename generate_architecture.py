@@ -28,10 +28,6 @@ print("[INFO] creating models")
 data_x = data[ : ,100, 100:201]
 trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.2, random_state = 42)
 
-for depth in range(1, 3):
-    units = NNModel.generate_combination_low_high(depth, 25, 150)
-    print("Number of combinations = {}".format(units.shape[0]))
-    ##for i in range(0, units.shape[0]):
-     ##   pass
-
-print('Kraj')
+low_high_arr = np.array([90, 110, 40, 60, 15, 35]).reshape((3, 2))
+units = NNModel.generate_combination_low_high_different(low_high_arr)
+print("Number of combinations = {}".format(units.shape[0]))
