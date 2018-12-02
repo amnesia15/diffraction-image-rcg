@@ -12,9 +12,9 @@ from keras.initializers import glorot_normal
 from keras.layers.core import Dropout
 from nn_model import NNModel
 
-dir_imgs = '/home/amnesia/Desktop/1000_imgs/'
+dir_imgs = 'images/'
 
-dir_params = '/home/amnesia/Desktop/1000/'
+dir_params = 'images/raw_data/'
 
 
 data = []
@@ -32,7 +32,7 @@ for i in range(0, 1000):
 data = np.array(data)
 params = np.array(params)
 
-print("[INFO] creating model...")
+print("[INFO] spliting data...")
 
 data_x = data[ : ,100, 100:201]
 trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.2, random_state = 42)
@@ -40,37 +40,58 @@ trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.2,
 
 model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101)
 
+print("[INFO] printing model summary...")
+
 model.summary()
 
 print('[INFO] training model...')
-
-mae_test = []
-mae_train = []
-mae_cv = []
 
 loss_train = []
 loss_cv = []
 
 EPOCHS = 5000
+ITERATIONS = 3
 
-for i in range(0, EPOCHS):
-    H = model.fit(trainX, trainY, validation_split=0.25, epochs=1)
-    mae_train.append(H.history['mean_absolute_error'])
-    mae_cv.append(H.history['val_mean_absolute_error'])
-    mae_test.append(model.evaluate(testX, testY)[1])
-    loss_train.append(H.history['loss'])
-    loss_cv.append(H.history['val_loss'])
+mae_hist_train = []
+mae_hist_cv = []
+mae_hist_test = []
 
-loss_and_metrics = model.evaluate(testX, testY)
+for i in range(0, ITERATIONS):
+    model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101)
+    H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0)
+    mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
+    mae_hist_cv.append(H.history['val_mean_absolute_error'][EPOCHS - 1])
+    mae_hist_test.append(model.evaluate(testX, testY)[1])
 
+
+mae_hist_train_np = np.array(mae_hist_train)
+mae_hist_cv_np = np.array(mae_hist_cv)
+mae_hist_test_np = np.array(mae_hist_test)
+
+mean_train = np.mean(mae_hist_train_np)
+mean_cv = np.mean(mae_hist_cv_np)
+mean_test = np.mean(mae_hist_test_np)
+
+std_train = np.std(mae_hist_train_np)
+std_cv = np.std(mae_hist_cv_np)
+std_test = np.std(mae_hist_test_np)
+
+print("[INFO] printing descriptive statistics...")
+
+file_stat = open('model_output/stats.txt', 'w')
+file_stat.write("MAE_train = {}  STD_train = {}\n".format(mean_train, std_train))
+file_stat.write("MAE_cv = {}  STD_cv = {}\n".format(mean_cv, std_cv))
+file_stat.write("MAE_test = {}  STD_test = {}\n".format(mean_test, std_test))
+file_stat.close()
+
+# ploting the training for last iteration
 
 print('[INFO] ploting mean absolute error...')
 epochs = np.arange(0, EPOCHS)
 plt.style.use("ggplot")
 plt.figure()
-plt.plot(epochs, mae_train, label = "mean_absolute_error_train")
-plt.plot(epochs, mae_cv, label = "mean_absolute_error_cv")
-plt.plot(epochs, mae_test, label = "mean_absolute_error_test")
+plt.plot(epochs, H.history['mean_absolute_error'], label = "mean_absolute_error_train")
+plt.plot(epochs, H.history['val_mean_absolute_error'], label = "mean_absolute_error_cv")
 plt.title("Mean absolute error (training, cv, test)")
 plt.xlabel("Epoch")
 plt.ylabel("Mean absolute error")
@@ -78,7 +99,8 @@ plt.legend()
 plt.savefig('model_output/plot.png')
 
 print('[INFO] evaluating and predicting...')
-print(model.evaluate(testX, testY))
+print("Latest model evaluation is {}.".format(model.evaluate(testX, testY)[1]))
+print("Mean model evaluation is {}".format(mean_test))
 model.save('model_output/model.model')
 plot_model(model, to_file='model_output/model.png', show_layer_names=True,
     show_shapes=True)
@@ -113,8 +135,8 @@ plt.savefig('model_output/pred_vs_realH.png')
 
 print('[INFO] ploting loss...')
 plt.figure()
-plt.plot(epochs, loss_train, label = 'loss_training')
-plt.plot(epochs, loss_cv, label = 'loss_cv')
+plt.plot(epochs, H.history['loss'], label = 'loss_training')
+plt.plot(epochs, H.history['val_loss'], label = 'loss_cv')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.title("Loss function (training, cv)")
