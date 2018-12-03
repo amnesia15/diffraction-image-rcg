@@ -11,10 +11,20 @@ from keras.utils import plot_model
 from keras.initializers import glorot_normal
 from keras.layers.core import Dropout
 from nn_model import NNModel
+import argparse
 
-dir_imgs = 'images/'
+ap = argparse.ArgumentParser()
+ap.add_argument("-ip", "--image_path", required = False,
+    default = "images/",
+    help = "path to input images")
+ap.add_argument("-pp", "--par_path", required = False,
+    default = "images/raw_data/",
+    help = "path to input parameters of images (R, H)")
+args = vars(ap.parse_args())
 
-dir_params = 'images/raw_data/'
+dir_imgs = args['image_path']
+
+dir_params = args['par_path']
 
 
 data = []
