@@ -2,11 +2,42 @@ from sklearn.model_selection import train_test_split
 from nn_model import NNModel
 import cv2
 import numpy as np
+import argparse
 
-dir_imgs = '/home/amnesia/Desktop/1000_imgs/'
+ap = argparse.ArgumentParser()
+ap.add_argument("-ip", "--image_path", required = False,
+    default = "images/",
+    help = "path to input images")
+ap.add_argument("-pp", "--par_path", required = False,
+    default = "images/params/",
+    help = "path to input parameters of images (R, H)")
+ap.add_argument("-e", "--epochs", required = False,
+    default = 50,
+    help = "number of epochs for training")
+ap.add_argument("-lr", "--learning_rate", required = False,
+    default = 0.00001,
+    help = "learning rate for optimizer")
+ap.add_argument("-mo", "--model_output", required = False,
+    default = "model_output/",
+    help = "path for model outputs")
+ap.add_argument("-ul", "--units_limit", required = False,
+    nargs = '+', default = [90, 110, 40, 60],
+    help = "limits per hidden layer")
 
-dir_params = '/home/amnesia/Desktop/1000/'
+args = vars(ap.parse_args())
 
+dir_imgs = args["image_path"]
+
+dir_params = args["par_path"]
+
+LIM_UNITS = [int(x) for x in args["units_limit"]]
+LIM_UNITS = np.array(LIM_UNITS)
+if (LIM_UNITS.size % 2 != 0):
+    print("-ul not multiple of 2")
+    exit(1)
+LIM_UNITS = LIM_UNITS.reshape(LIM_UNITS.size / 2, 2)
+
+LEARNING_RATE = float(args["learning_rate"])
 
 data = []
 params = []
@@ -29,17 +60,17 @@ data_x = data[ : ,100, 100:201]
 trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.2, random_state = 42)
 
 #low_high_arr = np.array([90, 110, 40, 60, 15, 35]).reshape((3, 2))
-low_high_arr = np.array([90, 110, 40, 60]).reshape((2, 2))
+#low_high_arr = np.array([90, 110, 40, 60]).reshape((2, 2))
 
-units = NNModel.generate_combination_low_high_different(low_high_arr)
+units = NNModel.generate_combination_low_high_different(LIM_UNITS)
 print("Number of combinations = {}".format(units.shape[0]))
 
-EPOCHS = 50
+EPOCHS = int(args["epochs"])
 mae_hist_train = []
 mae_hist_cv = []
 mae_hist_test = []
 
-model = NNModel.build(units[0, ], 101, 0.001)
+model = NNModel.build(units[0, ], 101, LEARNING_RATE)
 H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0)
 mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
 mae_hist_cv.append(H.history['val_mean_absolute_error'][EPOCHS - 1])
@@ -51,7 +82,7 @@ best_hidden = units[0, ]
 
 for i in range(1, units.shape[0]):
     print("Iteration no. {}".format(i))
-    model = NNModel.build(units[i, ], 101, 0.001)
+    model = NNModel.build(units[i, ], 101, LEARNING_RATE)
 
     H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0)
 
@@ -64,7 +95,7 @@ for i in range(1, units.shape[0]):
         best_hidden = units[i, ]
 
 
-file = open('model_output/best.txt', 'w')
+file = open('{}best.txt'.format(args["model_output"]), 'w')
 file.write("Best mae: {}\n".format(best_mae))
 file.write("Hidden units: ")
 for i in range(0, best_hidden.size):
