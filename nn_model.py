@@ -6,7 +6,7 @@ import numpy as np
 
 class NNModel(): 
     @staticmethod
-    def build(hidden_units, input_dimension):
+    def build(hidden_units, input_dimension, learning_rate):
         model = Sequential()
 
         model.add(Dense(units = hidden_units[0], activation = 'relu', kernel_initializer = glorot_normal(),
@@ -18,7 +18,7 @@ class NNModel():
 
         model.add(Dense(units = 2))    
 
-        model.compile(loss='mse', optimizer=Adam(lr=0.00001), metrics=["mean_absolute_error"])
+        model.compile(loss='mse', optimizer=Adam(lr=learning_rate), metrics=["mean_absolute_error"])
 
         return model
 

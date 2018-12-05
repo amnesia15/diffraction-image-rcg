@@ -39,7 +39,7 @@ mae_hist_train = []
 mae_hist_cv = []
 mae_hist_test = []
 
-model = NNModel.build(units[0, ], 101)
+model = NNModel.build(units[0, ], 101, 0.001)
 H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0)
 mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
 mae_hist_cv.append(H.history['val_mean_absolute_error'][EPOCHS - 1])
@@ -50,7 +50,8 @@ best_hidden = units[0, ]
 
 
 for i in range(1, units.shape[0]):
-    model = NNModel.build(units[i, ], 101)
+    print("Iteration no. {}".format(i))
+    model = NNModel.build(units[i, ], 101, 0.001)
 
     H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0)
 

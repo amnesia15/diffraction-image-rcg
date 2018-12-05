@@ -20,6 +20,17 @@ ap.add_argument("-ip", "--image_path", required = False,
 ap.add_argument("-pp", "--par_path", required = False,
     default = "images/raw_data/",
     help = "path to input parameters of images (R, H)")
+ap.add_argument("-e", "--epochs", required = False,
+    default = 6000,
+    help = "number of epochs for training")
+ap.add_argument("-lr", "--learning_rate", required = False,
+    default = 0.00001,
+    help = "learning rate for optimizer")
+ap.add_argument("-i", "--iterations", required = False,
+    default = 1,
+    help = "number of training iteration for the same architecture")
+
+
 args = vars(ap.parse_args())
 
 dir_imgs = args['image_path']
@@ -47,8 +58,12 @@ print("[INFO] spliting data...")
 data_x = data[ : ,100, 100:201]
 trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.2, random_state = 42)
 
+LEARNING_RATE = float(args["learning_rate"])
 
-model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101)
+#model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101)
+#model = NNModel.build(np.array([98, 60]), 101, 0.00001)
+model = NNModel.build(np.array([108, 55]), 101, LEARNING_RATE)
+#model = NNModel.build(np.array([1010,1010, 505, 250, 125, 25]), 101, 0.00001)
 
 print("[INFO] printing model summary...")
 
@@ -59,15 +74,17 @@ print('[INFO] training model...')
 loss_train = []
 loss_cv = []
 
-EPOCHS = 5000
-ITERATIONS = 3
+EPOCHS = int(args["epochs"])
+ITERATIONS = int(args["iterations"])
 
 mae_hist_train = []
 mae_hist_cv = []
 mae_hist_test = []
 
 for i in range(0, ITERATIONS):
-    model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101)
+    #model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101, 0.00001)
+    #model = NNModel.build(np.array([1010,1010, 505, 250, 125, 25]), 101, 0.00001)
+    model = NNModel.build(np.array([108, 55]), 101, LEARNING_RATE)
     H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0)
     mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
     mae_hist_cv.append(H.history['val_mean_absolute_error'][EPOCHS - 1])
