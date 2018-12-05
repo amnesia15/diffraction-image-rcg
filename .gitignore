@@ -1,9 +1,10 @@
 *.pyc
 
-/images/*
-!/images/SLIKA1.png
-!/images/SLIKA138.png
-!/images/SLIKA963.png
+#/images/*
+#!/images/SLIKA1.png
+#!/images/SLIKA138.png
+#!/images/SLIKA963.png
+/images/raw_data/*
 !/images/raw_data/input1/
 !/images/raw_data/input138/
 !/images/raw_data/input963/
