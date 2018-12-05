@@ -18,7 +18,7 @@ ap.add_argument("-ip", "--image_path", required = False,
     default = "images/",
     help = "path to input images")
 ap.add_argument("-pp", "--par_path", required = False,
-    default = "images/raw_data/",
+    default = "images/params/",
     help = "path to input parameters of images (R, H)")
 ap.add_argument("-e", "--epochs", required = False,
     default = 6000,
@@ -29,7 +29,12 @@ ap.add_argument("-lr", "--learning_rate", required = False,
 ap.add_argument("-i", "--iterations", required = False,
     default = 1,
     help = "number of training iteration for the same architecture")
-
+ap.add_argument("-hl", "--hidden_layers", required = False,
+    nargs = '+', default = [108, 55],
+    help = "number of units per hidden layer")
+ap.add_argument("-mo", "--model_output", required = False,
+    default = "model_output/",
+    help = "path for model outputs")
 
 args = vars(ap.parse_args())
 
@@ -37,6 +42,11 @@ dir_imgs = args['image_path']
 
 dir_params = args['par_path']
 
+model_out = args['model_output']
+
+
+H_LAYERS = [int(x) for x in args["hidden_layers"]]
+H_LAYERS = np.array(H_LAYERS)
 
 data = []
 params = []
@@ -62,7 +72,7 @@ LEARNING_RATE = float(args["learning_rate"])
 
 #model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101)
 #model = NNModel.build(np.array([98, 60]), 101, 0.00001)
-model = NNModel.build(np.array([108, 55]), 101, LEARNING_RATE)
+model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
 #model = NNModel.build(np.array([1010,1010, 505, 250, 125, 25]), 101, 0.00001)
 
 print("[INFO] printing model summary...")
@@ -84,7 +94,7 @@ mae_hist_test = []
 for i in range(0, ITERATIONS):
     #model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101, 0.00001)
     #model = NNModel.build(np.array([1010,1010, 505, 250, 125, 25]), 101, 0.00001)
-    model = NNModel.build(np.array([108, 55]), 101, LEARNING_RATE)
+    model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
     H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0)
     mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
     mae_hist_cv.append(H.history['val_mean_absolute_error'][EPOCHS - 1])
@@ -105,7 +115,7 @@ std_test = np.std(mae_hist_test_np)
 
 print("[INFO] printing descriptive statistics...")
 
-file_stat = open('model_output/stats.txt', 'w')
+file_stat = open('{}stats.txt'.format(model_out), 'w')
 file_stat.write("MAE_train = {}  STD_train = {}\n".format(mean_train, std_train))
 file_stat.write("MAE_cv = {}  STD_cv = {}\n".format(mean_cv, std_cv))
 file_stat.write("MAE_test = {}  STD_test = {}\n".format(mean_test, std_test))
@@ -123,18 +133,18 @@ plt.title("Mean absolute error (training, cv, test)")
 plt.xlabel("Epoch")
 plt.ylabel("Mean absolute error")
 plt.legend()
-plt.savefig('model_output/plot.png')
+plt.savefig('{}plot.png'.format(model_out))
 
 print('[INFO] evaluating and predicting...')
 print("Latest model evaluation is {}.".format(model.evaluate(testX, testY)[1]))
 print("Mean model evaluation is {}".format(mean_test))
-model.save('model_output/model.model')
-plot_model(model, to_file='model_output/model.png', show_layer_names=True,
+model.save('{}model.model'.format(model_out))
+plot_model(model, to_file='{}model.png'.format(model_out), show_layer_names=True,
     show_shapes=True)
 
 predictions = model.predict(testX)
 predictions = np.hstack((predictions, testY))
-np.savetxt('model_output/predictions.txt', predictions, delimiter='     ', fmt='%.2f')
+np.savetxt('{}predictions.txt'.format(model_out), predictions, delimiter='     ', fmt='%.2f')
 
 
 print('[INFO] ploting scatter plot of predictions...')
@@ -147,7 +157,7 @@ plt.xlabel('Real R')
 plt.ylabel('Predicted R')    
 plt.title("Predicted vs Real R")
 plt.legend()
-plt.savefig('model_output/pred_vs_realR.png')
+plt.savefig('{}pred_vs_realR.png'.format(model_out))
 
 plt.figure()
 plt.plot(testY[:,1], predictions[:, 1], 'b.', markersize = 1)
@@ -158,7 +168,7 @@ plt.xlabel('Real H')
 plt.ylabel('Predicted H')
 plt.title("Predicted vs Real H")
 plt.legend()
-plt.savefig('model_output/pred_vs_realH.png')
+plt.savefig('{}pred_vs_realH.png'.format(model_out))
 
 print('[INFO] ploting loss...')
 plt.figure()
@@ -168,4 +178,4 @@ plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.title("Loss function (training, cv)")
 plt.legend()
-plt.savefig('model_output/loss_func.png')
+plt.savefig('{}loss_func.png'.format(model_out))
