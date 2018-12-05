@@ -35,6 +35,9 @@ ap.add_argument("-hl", "--hidden_layers", required = False,
 ap.add_argument("-mo", "--model_output", required = False,
     default = "model_output/",
     help = "path for model outputs")
+ap.add_argument("-ts", "--test_split", required = False,
+    default = 0.2,
+    help = "proportion of the dataset to include in the test")
 
 args = vars(ap.parse_args())
 
@@ -47,6 +50,8 @@ model_out = args['model_output']
 
 H_LAYERS = [int(x) for x in args["hidden_layers"]]
 H_LAYERS = np.array(H_LAYERS)
+
+TEST_SPL = float(args["test_split"])
 
 data = []
 params = []
@@ -66,7 +71,7 @@ params = np.array(params)
 print("[INFO] spliting data...")
 
 data_x = data[ : ,100, 100:201]
-trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.2, random_state = 42)
+trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = TEST_SPL, random_state = 42)
 
 LEARNING_RATE = float(args["learning_rate"])
 

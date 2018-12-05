@@ -23,6 +23,9 @@ ap.add_argument("-mo", "--model_output", required = False,
 ap.add_argument("-ul", "--units_limit", required = False,
     nargs = '+', default = [90, 110, 40, 60],
     help = "limits per hidden layer")
+ap.add_argument("-ts", "--test_split", required = False,
+    default = 0.2,
+    help = "proportion of the dataset to include in the test")
 
 args = vars(ap.parse_args())
 
@@ -38,6 +41,8 @@ if (LIM_UNITS.size % 2 != 0):
 LIM_UNITS = LIM_UNITS.reshape(LIM_UNITS.size / 2, 2)
 
 LEARNING_RATE = float(args["learning_rate"])
+
+TEST_SPL = float(args["test_split"])
 
 data = []
 params = []
@@ -57,7 +62,7 @@ params = np.array(params)
 print("[INFO] creating models")
 
 data_x = data[ : ,100, 100:201]
-trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = 0.2, random_state = 42)
+trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = TEST_SPL, random_state = 42)
 
 #low_high_arr = np.array([90, 110, 40, 60, 15, 35]).reshape((3, 2))
 #low_high_arr = np.array([90, 110, 40, 60]).reshape((2, 2))
