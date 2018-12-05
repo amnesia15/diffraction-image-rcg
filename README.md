@@ -15,7 +15,7 @@ Nijedan parameter nije obavezan ako ste zadovoljni podrazumevanim vrednostima.
 
 Jedno pokretanje training_model.py izgleda:
 ```
-python training_model.py -ip images/ -pp images/params/ -e 6000 -lr 0.00001 -i 1 -hl 108 55 -mo model_output/
+python training_model.py -ip images/ -pp images/params/ -e 6000 -lr 0.00001 -i 1 -hl 108 55 -mo model_output/ -ts 0.2
 ```
 
 Za vrsenje predikcije nad nekom slikom koristi se **predict.py** skripta. Skripta ima sledece parametre:
@@ -37,7 +37,7 @@ Za isprobavanje razlicitih kombinacija arhitekture koristi se skripta **generate
 
 Jedno pokretanje za isprobavanje razlicitih arhitektura izgleda:
 ```
-python generate_architecture.py -ip images/ -pp images/params/ -e 50 -lr 0.0001 -mo model_output/ -ul 90 110 40 60
+python generate_architecture.py -ip images/ -pp images/params/ -e 50 -lr 0.0001 -mo model_output/ -ul 90 110 40 60 -ts 0.2
 ```
 
 **loading.r** is used for loading files into R environment, normalizing images, and creating matrix corresponding to grayscale image pixels.  
