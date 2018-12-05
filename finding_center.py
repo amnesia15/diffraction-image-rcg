@@ -18,7 +18,7 @@ def find_center(image):
     c_x = int(M["m10"] / M["m00"])
     c_y = int(M["m01"] / M["m00"])
 
-    return (c_x + 1, c_y)
+    return (c_x + 1, c_y + 1)
 
 def get_image_for_model(image):
     center = find_center(image)
@@ -27,6 +27,8 @@ def get_image_for_model(image):
     row_end = center[1] + 101
     col_start = center[0] - 100
     col_end = center[0] + 101
+
+    print(row_start, row_end, col_start, col_end)
     
     new_image = image[row_start:row_end, col_start:col_end]
     
