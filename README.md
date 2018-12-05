@@ -35,7 +35,7 @@ Za isprobavanje razlicitih kombinacija arhitekture koristi se skripta **generate
 
 Jedno pokretanje za isprobavanje razlicitih arhitektura izgleda:
 ```
-python generate_architecture.py -ip images/ -pp images/params/ -e 50 -lr 0.0001 -mo model_output/ -ul 30 40
+python generate_architecture.py -ip images/ -pp images/params/ -e 50 -lr 0.0001 -mo model_output/ -ul 90 110 40 60
 ```
 
 **loading.r** is used for loading files into R environment, normalizing images, and creating matrix corresponding to grayscale image pixels.  
