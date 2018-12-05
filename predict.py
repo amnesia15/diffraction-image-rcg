@@ -12,7 +12,9 @@ args = vars(ap.parse_args())
 
 print('[INFO] loading image...')
 image = cv2.imread(args['path'], cv2.IMREAD_GRAYSCALE)
+print(image.shape)
 image = get_image_for_model(image)
+print(image.shape)
 input_x = image[100, 100:201]
 input_x = np.reshape(input_x, (1, 101))
 
