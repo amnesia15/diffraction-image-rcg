@@ -15,6 +15,13 @@ Jedno pokretanje training_model.py izgleda:
 python training_model.py -ip images/ -pp images/params/ -e 6000 -lr 0.00001 -i 1 -hl 108 55 -mo model_output/
 ```
 
+Za vrsenje predikcije nad nekom slikom koristi se **predict.py** skripta. Skripta ima sledece parametre:
+* **-p** - putanju do slike 
+Jedno pokretranje za predikciju izgleda
+```
+python predict.py -p images/SLIKA1.png
+```
+
 **loading.r** is used for loading files into R environment, normalizing images, and creating matrix corresponding to grayscale image pixels.  
 
 **create_image.m** is used for generating images. This script should be used from directory of the previously saved files.
