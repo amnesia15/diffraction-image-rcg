@@ -38,6 +38,9 @@ ap.add_argument("-mo", "--model_output", required = False,
 ap.add_argument("-ts", "--test_split", required = False,
     default = 0.2,
     help = "proportion of the dataset to include in the test")
+ap.add_argument("-bs", "--batch_size", required = False,
+    default = 32,
+    help = "number of samples per gradient update")
 
 args = vars(ap.parse_args())
 
@@ -52,6 +55,8 @@ H_LAYERS = [int(x) for x in args["hidden_layers"]]
 H_LAYERS = np.array(H_LAYERS)
 
 TEST_SPL = float(args["test_split"])
+
+BATCH_SIZE = int(args["batch_size"])
 
 data = []
 params = []
@@ -100,7 +105,8 @@ for i in range(0, ITERATIONS):
     #model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101, 0.00001)
     #model = NNModel.build(np.array([1010,1010, 505, 250, 125, 25]), 101, 0.00001)
     model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
-    H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0)
+    H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0,
+        batch_size=BATCH_SIZE)
     mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
     mae_hist_cv.append(H.history['val_mean_absolute_error'][EPOCHS - 1])
     mae_hist_test.append(model.evaluate(testX, testY)[1])

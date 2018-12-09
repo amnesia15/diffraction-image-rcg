@@ -26,6 +26,9 @@ ap.add_argument("-ul", "--units_limit", required = False,
 ap.add_argument("-ts", "--test_split", required = False,
     default = 0.2,
     help = "proportion of the dataset to include in the test")
+ap.add_argument("-bs", "--batch_size", required = False,
+    default = 32,
+    help = "number of samples per gradient update")
 
 args = vars(ap.parse_args())
 
@@ -43,6 +46,8 @@ LIM_UNITS = LIM_UNITS.reshape(LIM_UNITS.size / 2, 2)
 LEARNING_RATE = float(args["learning_rate"])
 
 TEST_SPL = float(args["test_split"])
+
+BATCH_SIZE = int(args["batch_size"])
 
 data = []
 params = []
@@ -76,7 +81,8 @@ mae_hist_cv = []
 mae_hist_test = []
 
 model = NNModel.build(units[0, ], 101, LEARNING_RATE)
-H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0)
+H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0,
+    batch_size=BATCH_SIZE)
 mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
 mae_hist_cv.append(H.history['val_mean_absolute_error'][EPOCHS - 1])
 mae_hist_test.append(model.evaluate(testX, testY)[1])
@@ -89,7 +95,8 @@ for i in range(1, units.shape[0]):
     print("Iteration no. {}".format(i))
     model = NNModel.build(units[i, ], 101, LEARNING_RATE)
 
-    H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0)
+    H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0,
+        batch_size=BATCH_SIZE)
 
     mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
     mae_hist_cv.append(H.history['val_mean_absolute_error'][EPOCHS - 1])
