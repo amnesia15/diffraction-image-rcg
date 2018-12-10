@@ -32,6 +32,9 @@ ap.add_argument("-bs", "--batch_size", required = False,
 ap.add_argument("-dr", "--dropout_rates", required = False,
     nargs = "+", default = [0.3, 0.1],
     help = "droupout rates")
+ap.add_argument("-r", "--regularization", required = False,
+    default = 0,
+    help = "regularization (0 - no regularization, 1 - dropout method)")
 
 args = vars(ap.parse_args())
 
@@ -54,6 +57,8 @@ LEARNING_RATE = float(args["learning_rate"])
 TEST_SPL = float(args["test_split"])
 
 BATCH_SIZE = int(args["batch_size"])
+
+REGULARIZATION = int(args["regularization"])
 
 data = []
 params = []
@@ -86,7 +91,11 @@ mae_hist_train = []
 mae_hist_cv = []
 mae_hist_test = []
 
-model = NNModel.build(units[0, ], 101, LEARNING_RATE)
+if (REGULARIZATION == 0):
+    model = NNModel.build(units[0, ], 101, LEARNING_RATE)
+elif (REGULARIZATION == 1):
+    model = NNModel.build_dropout(units[0, ], 101, LEARNING_RATE, DROPOUT_RATES)
+
 H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0,
     batch_size=BATCH_SIZE)
 mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
@@ -99,7 +108,10 @@ best_hidden = units[0, ]
 
 for i in range(1, units.shape[0]):
     print("Iteration no. {}".format(i))
-    model = NNModel.build(units[i, ], 101, LEARNING_RATE)
+    if (REGULARIZATION == 0):
+        model = NNModel.build(units[0, ], 101, LEARNING_RATE)
+    elif (REGULARIZATION == 1):
+        model = NNModel.build_dropout(units[0, ], 101, LEARNING_RATE, DROPOUT_RATES)
 
     H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0,
         batch_size=BATCH_SIZE)
