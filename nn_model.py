@@ -2,6 +2,7 @@ from keras.models import Sequential
 from keras.layers.core import Dense
 from keras.optimizers import Adam
 from keras.initializers import glorot_normal
+from keras.layers import Dropout
 import numpy as np
 
 class NNModel(): 
@@ -14,10 +15,30 @@ class NNModel():
         
         for i in range(1, hidden_units.size):
             model.add(Dense(units = hidden_units[i], activation = 'relu', 
-            kernel_initializer = glorot_normal()))
+                kernel_initializer = glorot_normal()))
 
         model.add(Dense(units = 2))    
 
+        model.compile(loss='mse', optimizer=Adam(lr=learning_rate), metrics=["mean_absolute_error"])
+
+        return model
+
+    @staticmethod
+    def build_dropout(hidden_units, input_dimension, learning_rate, dropout_rate):
+        model = Sequential()
+
+        model.add(Dense(units = hidden_units[0], activation = 'relu', kernel_initializer = glorot_normal(),
+            input_dim = input_dimension))
+
+        model.add(Dropout(dropout_rate[0]))
+
+        for i in range(1, hidden_units.size):
+            model.add(Dense(units = hidden_units[i], activation = 'relu', 
+                kernel_initializer = glorot_normal()))
+            model.add(Dropout(dropout_rate[i]))
+
+        model.add(Dense(units = 2))  
+        
         model.compile(loss='mse', optimizer=Adam(lr=learning_rate), metrics=["mean_absolute_error"])
 
         return model

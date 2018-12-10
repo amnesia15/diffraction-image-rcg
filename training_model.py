@@ -41,6 +41,9 @@ ap.add_argument("-ts", "--test_split", required = False,
 ap.add_argument("-bs", "--batch_size", required = False,
     default = 32,
     help = "number of samples per gradient update")
+ap.add_argument("-dr", "--dropout_rates", required = False,
+    nargs = "+", default = [0.3, 0.1],
+    help = "droupout rates")
 
 args = vars(ap.parse_args())
 
@@ -53,6 +56,9 @@ model_out = args['model_output']
 
 H_LAYERS = [int(x) for x in args["hidden_layers"]]
 H_LAYERS = np.array(H_LAYERS)
+
+DROPOUT_RATES = [float(x) for x in args["dropout_rates"]]
+DROPOUT_RATES = np.array(DROPOUT_RATES)
 
 TEST_SPL = float(args["test_split"])
 
@@ -82,8 +88,9 @@ LEARNING_RATE = float(args["learning_rate"])
 
 #model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101)
 #model = NNModel.build(np.array([98, 60]), 101, 0.00001)
-model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
+#model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
 #model = NNModel.build(np.array([1010,1010, 505, 250, 125, 25]), 101, 0.00001)
+model = NNModel.build_dropout(H_LAYERS, 101, LEARNING_RATE, DROPOUT_RATES)
 
 print("[INFO] printing model summary...")
 
@@ -104,7 +111,8 @@ mae_hist_test = []
 for i in range(0, ITERATIONS):
     #model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101, 0.00001)
     #model = NNModel.build(np.array([1010,1010, 505, 250, 125, 25]), 101, 0.00001)
-    model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
+    #model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
+    model = NNModel.build_dropout(H_LAYERS, 101, LEARNING_RATE, DROPOUT_RATES)
     H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0,
         batch_size=BATCH_SIZE)
     mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])

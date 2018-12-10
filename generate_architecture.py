@@ -29,6 +29,9 @@ ap.add_argument("-ts", "--test_split", required = False,
 ap.add_argument("-bs", "--batch_size", required = False,
     default = 32,
     help = "number of samples per gradient update")
+ap.add_argument("-dr", "--dropout_rates", required = False,
+    nargs = "+", default = [0.3, 0.1],
+    help = "droupout rates")
 
 args = vars(ap.parse_args())
 
@@ -42,6 +45,9 @@ if (LIM_UNITS.size % 2 != 0):
     print("-ul not multiple of 2")
     exit(1)
 LIM_UNITS = LIM_UNITS.reshape(LIM_UNITS.size / 2, 2)
+
+DROPOUT_RATES = [float(x) for x in args["dropout_rates"]]
+DROPOUT_RATES = np.array(DROPOUT_RATES)
 
 LEARNING_RATE = float(args["learning_rate"])
 
