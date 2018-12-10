@@ -11,6 +11,7 @@ Za treniranje neuronske mreze nad podacima koristi se **training_model.py** skri
 * **-mo** - putanja za snimanja modela, grafika i predikcija (podrazumevano **"model_output/"**)
 * **-ts** - procenat podataka koji ce biti sacuvan kao skup za testiranje, broj izmedju 0.0 i 1.0 (podrazumevano **0.2**)
 * **-bs** - broj uzorka po azuriranju gradijenta (podrazumevano **32**)
+* **-dr** - dropout rates po skrivenom sloju (podrazumevano **[0.3, 0.1]**)
 
 Nijedan parameter nije obavezan ako ste zadovoljni podrazumevanim vrednostima.
 
@@ -36,6 +37,7 @@ Za isprobavanje razlicitih kombinacija arhitekture koristi se skripta **generate
 * **-ul** - granice broja jedinica u skrivenom sloju, po dva broja za jedan sloj (donja i gornja granica ukljucujuci i ta oba broja) (podrazumevano **[90, 110, 40, 60]**)
 * **-ts** - procenat podataka koji ce biti sacuvan kao skup za testiranje, broj izmedju 0.0 i 1.0 (podrazumevano **0.2**)
 * **-bs** - broj uzorka po azuriranju gradijenta (podrazumevano **32**)
+* **-dr** - dropout rates po skrivenom sloju (podrazumevano **[0.3, 0.1]**)
 
 Jedno pokretanje za isprobavanje razlicitih arhitektura izgleda:
 ```
