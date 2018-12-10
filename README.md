@@ -1,4 +1,4 @@
-# diffraction-image-rcg
+# Diffraction Image Parameter Recognition
 
 
 Za treniranje neuronske mreze nad podacima koristi se **training_model.py** skripta. Skripta ima sledece parametre i to:
