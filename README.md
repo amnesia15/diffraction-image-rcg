@@ -1,5 +1,7 @@
 # Diffraction Image Parameter Recognition
 
+U ovom radu je razvijen model za odredjivanje parametara tragova u dozimetriji. Dozimetrija je grana u fizici koja se bavi odredjivanjem apsorbovane doze jonizujuceg zracenja u materijalima. Za odredjivanje ove doze korisceni su trag detektori, tacnije detektor CR-39. Trag detektor se ilaze radijaciji a nakon toga se deteljno pregleda pod mikroskopom. Tragovi nuklearnih cestica mogu da prikazu razlicite informacije poput mase, energije i pravca kretanja cestica. Na osnovu difrakcionih slika pokazano je da se koriscenjem dubokog ucena mogu prepoznati parametri radijusa i dubine tragova sa zadovoljavajucom preciznoscu.
+
 Za transformaciju podataka dobijih od strane fortran programa koristi se skripta **transform_data.py**. Skripta ima sledece parametre:
 * **-dp** - putanja do ulaznih podataka (podrazumevano **images/raw_data/**)
 * **-op** - putanja za izlazne slike (podrazumevano **images/**)
