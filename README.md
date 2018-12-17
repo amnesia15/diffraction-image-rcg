@@ -1,8 +1,12 @@
 # Diffraction Image Parameter Recognition
 
 Za transformaciju podataka dobijih od strane fortran programa koristi se skripta **transform_data.py**. Skripta ima sledece parametre:
-* **-dp** - putanja do ulaznih podataka
-* **-op** - putanja za izlazne slike
+* **-dp** - putanja do ulaznih podataka (podrazumevano **images/raw_data/**)
+* **-op** - putanja za izlazne slike (podrazumevano **images/**)
+
+```
+python transform_data.py -dp images/raw_data/ -op images/
+```
 
 Za treniranje neuronske mreze nad podacima koristi se **training_model.py** skripta. Skripta ima sledece parametre i to:
 * **-ip** - putanja do ulaznih slika (podrazumevano **"images/"**)
