@@ -3,6 +3,16 @@
 
 U ovom radu je razvijen model za odredjivanje parametara tragova u dozimetriji. Dozimetrija je grana u fizici koja se bavi odredjivanjem apsorbovane doze jonizujuceg zracenja u materijalima. Za odredjivanje ove doze korisceni su trag detektori, tacnije detektor CR-39. Trag detektor se izlaze radijaciji a nakon toga se deteljno pregleda pod mikroskopom. Tragovi nuklearnih cestica mogu da prikazu razlicite informacije poput mase, energije i pravca kretanja cestica. Na osnovu difrakcionih slika pokazano je da se koriscenjem dubokog ucena mogu prepoznati parametri radijusa i dubine tragova sa zadovoljavajucom preciznoscu.
 
+## Instalacija
+Potrebno je klonirati github repozitorjum koriscenjem:
+```
+git clone https://github.com/amnesia15/diffraction-image-rcg.git
+```
+Za koriscenje projekta potreban je python 2.7 nakon kojeg je potrebno instalirati odgovarajuce pakete koriscenjem komande:
+```
+pip install -r requirements.txt
+```
+
 ## Upustvo za koriscenje
 
 ![alt text](https://github.com/amnesia15/diffraction-image-rcg/blob/master/docs/images/pipeline.png "Pipeline")
