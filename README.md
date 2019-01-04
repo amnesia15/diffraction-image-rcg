@@ -5,6 +5,9 @@ U ovom radu je razvijen model za odredjivanje parametara tragova u dozimetriji. 
 
 ## Upustvo za koriscenje
 
+![alt text](https://github.com/amnesia15/diffraction-image-rcg/blob/master/docs/images/pipeline.png "Pipeline")
+
+
 Za transformaciju podataka dobijih od strane fortran programa koristi se skripta **transform_data.py**. Skripta ima sledece parametre:
 * **-dp** - putanja do ulaznih podataka (podrazumevano **images/raw_data/**)
 * **-op** - putanja za izlazne slike (podrazumevano **images/**)
