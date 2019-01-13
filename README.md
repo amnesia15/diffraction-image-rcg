@@ -8,7 +8,7 @@ Potrebno je klonirati github repozitorjum koriscenjem:
 ```
 git clone https://github.com/amnesia15/diffraction-image-rcg.git
 ```
-Za koriscenje projekta potreban je python 2.7 nakon kojeg je potrebno instalirati odgovarajuce pakete koriscenjem komande:
+Za koriscenje projekta na Linux sistemima potreban je Python 2.7 ili noviji. Za Windows OS potrebno je imati Python 3.6 ili noviji. Takodje je potrebno imati instaliran GraphViz. Nakon ovoga je potrebno instalirati odgovarajuce Python pakete koriscenjem komande:
 ```
 pip install -r requirements.txt
 ```
