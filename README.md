@@ -52,6 +52,8 @@ python training_model.py -ip images/ -pp images/params/ -e 6000 -lr 0.00001 -i 1
 
 Za vrsenje predikcije nad nekom slikom koristi se **predict.py** skripta. Skripta ima sledece parametre:
 * **-p** - putanju do slike 
+* **-ds** - putanju do binarnog fajla za scaler za odlike
+* **-ps** - putanju do binarnog fajla za scaler za izlazne varijable
 
 Jedno pokretranje za predikciju izgleda:
 ```
