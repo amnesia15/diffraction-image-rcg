@@ -12,6 +12,11 @@ from keras.initializers import glorot_normal
 from keras.layers.core import Dropout
 from nn_model import NNModel
 import argparse
+from keras.callbacks import EarlyStopping
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.externals import joblib
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_squared_error
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-ip", "--image_path", required = False,
@@ -69,6 +74,8 @@ BATCH_SIZE = int(args["batch_size"])
 
 REGULARIZATION = int(args["regularization"])
 
+LEARNING_RATE = float(args["learning_rate"])
+
 data = []
 params = []
 
@@ -84,18 +91,21 @@ for i in range(0, 1000):
 data = np.array(data)
 params = np.array(params)
 
-print("[INFO] spliting data...")
 
-data_x = data[ : ,100, 100:201]
-trainX, testX, trainY, testY = train_test_split(data_x, params, test_size = TEST_SPL, random_state = 42)
+# Picking up features for a model
+data = data[ : ,100, 100:201]
 
-LEARNING_RATE = float(args["learning_rate"])
 
-#model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101)
-#model = NNModel.build(np.array([98, 60]), 101, 0.00001)
-#model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
-#model = NNModel.build(np.array([1010,1010, 505, 250, 125, 25]), 101, 0.00001)
+# Scaling the features and output to the range between 0 and 1
+sc = MinMaxScaler(feature_range=(0, 1))
 
+data = sc.fit_transform(data)
+joblib.dump(sc, '{}data.scaler'.format(model_out))
+params = sc.fit_transform(params)
+joblib.dump(sc, '{}params.scaler'.format(model_out))
+
+
+# Building the model with or without regularization
 if (REGULARIZATION == 0):
     model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
 elif (REGULARIZATION == 1):
@@ -106,83 +116,128 @@ print("[INFO] printing model summary...")
 
 model.summary()
 
-print('[INFO] training model...')
-
 loss_train = []
 loss_cv = []
 
 EPOCHS = int(args["epochs"])
 ITERATIONS = int(args["iterations"])
 
-mae_hist_train = []
-mae_hist_cv = []
+mae_hist_training = []
 mae_hist_test = []
 
+mse_hist_training = []
+mse_hist_test = []
+
+earlystop = EarlyStopping(monitor="val_mean_absolute_error", min_delta=0.0001, patience=5,
+    verbose=1, mode="auto")
+
+callback_list = [earlystop]
+
 for i in range(0, ITERATIONS):
-    #model = NNModel.build(np.array([101, 101, 50, 50, 25]), 101, 0.00001)
-    #model = NNModel.build(np.array([1010,1010, 505, 250, 125, 25]), 101, 0.00001)
-    #model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
+    print("[INFO] spliting data...")
+    trainX, testX, trainY, testY = train_test_split(data, params, test_size = TEST_SPL)
+
     if (REGULARIZATION == 0):
         model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
     elif (REGULARIZATION == 1):
         model = NNModel.build_dropout(H_LAYERS, 101, LEARNING_RATE, DROPOUT_RATES)
 
-    H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=0,
-        batch_size=BATCH_SIZE)
-    mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
-    mae_hist_cv.append(H.history['val_mean_absolute_error'][EPOCHS - 1])
-    mae_hist_test.append(model.evaluate(testX, testY)[1])
+    print('[INFO] training model...')
+
+    H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=1,
+        batch_size=BATCH_SIZE, callbacks=callback_list)
+
+    
+    # Predicting the R and H with the model
+    predicted_test = model.predict(testX)
+    predicted_training = model.predict(trainX)
 
 
-mae_hist_train_np = np.array(mae_hist_train)
-mae_hist_cv_np = np.array(mae_hist_cv)
-mae_hist_test_np = np.array(mae_hist_test)
+    # Loading the normalizer and transforming the values back to normal range
+    sc = joblib.load('{}params.scaler'.format(model_out))
+    predicted_test_scaled = sc.inverse_transform(predicted_test)
+    predicted_training_scaled = sc.inverse_transform(predicted_training)
+    testY_scaled = sc.inverse_transform(testY)
+    trainY_scaled = sc.inverse_transform(trainY)
 
-mean_train = np.mean(mae_hist_train_np)
-mean_cv = np.mean(mae_hist_cv_np)
-mean_test = np.mean(mae_hist_test_np)
+    # Calculating the mean absolute error
+    current_mae_test = mean_absolute_error(testY_scaled, predicted_test_scaled)
+    current_mae_training = mean_absolute_error(trainY_scaled, predicted_training_scaled) 
 
-std_train = np.std(mae_hist_train_np)
-std_cv = np.std(mae_hist_cv_np)
-std_test = np.std(mae_hist_test_np)
+    # Calculating the mean squared error
+    current_mse_test = mean_squared_error(testY_scaled, predicted_test_scaled)
+    current_mse_training = mean_squared_error(trainY_scaled, predicted_training_scaled)
+
+    mae_hist_test.append(current_mae_test)
+    mae_hist_training.append(current_mae_training)
+
+    mse_hist_test.append(current_mse_test)
+    mse_hist_training.append(current_mse_training)
+
+
+
+# Converting the list to numpy array
+mae_hist_test = np.array(mae_hist_test)
+mae_hist_training = np.array(mae_hist_training)
+
+mse_hist_test = np.array(mse_hist_test)
+mse_hist_training = np.array(mse_hist_training)
+
+
+
+# Calculating the mean value for the errors
+mean_mae_test = np.mean(mae_hist_test)
+mean_mae_training = np.mean(mae_hist_training)
+
+mean_mse_test = np.mean(mse_hist_test)
+mean_mse_training = np.mean(mse_hist_training)
+
+# Calculating the standard deviation for the errors
+std_mae_test = np.std(mae_hist_test)
+std_mae_training = np.std(mae_hist_training)
+
+std_mse_test = np.std(mse_hist_test)
+std_mse_training = np.std(mse_hist_training)
 
 print("[INFO] printing descriptive statistics...")
 
 file_stat = open('{}stats.txt'.format(model_out), 'w')
-file_stat.write("MAE_train = {}  STD_train = {}\n".format(mean_train, std_train))
-file_stat.write("MAE_cv = {}  STD_cv = {}\n".format(mean_cv, std_cv))
-file_stat.write("MAE_test = {}  STD_test = {}\n".format(mean_test, std_test))
+file_stat.write("MAE_train = {}  STD_train = {}\n".format(mean_mae_training, std_mae_training))
+file_stat.write("MAE_test = {}  STD_test = {}\n".format(mean_mae_test, std_mae_test))
+file_stat.write("MSE_train = {}  STD_train = {}\n".format(mean_mse_training, std_mse_training))
+file_stat.write("MSE_test = {}  STD_test = {}\n".format(mean_mse_test, std_mse_test))
 file_stat.close()
 
-# ploting the training for last iteration
-
+# Ploting the training plot for the last iteration
 print('[INFO] ploting mean absolute error...')
-epochs = np.arange(0, EPOCHS)
+epochs = np.arange(0, len(H.history['mean_absolute_error']))
 plt.style.use("ggplot")
 plt.figure()
 plt.plot(epochs, H.history['mean_absolute_error'], label = "mean_absolute_error_train")
 plt.plot(epochs, H.history['val_mean_absolute_error'], label = "mean_absolute_error_cv")
-plt.title("Mean absolute error (training, cv, test)")
+plt.title("Mean absolute error (training, cv)")
 plt.xlabel("Epoch")
 plt.ylabel("Mean absolute error")
 plt.legend()
 plt.savefig('{}plot.png'.format(model_out))
 
-print('[INFO] evaluating and predicting...')
-print("Latest model evaluation is {}.".format(model.evaluate(testX, testY)[1]))
-print("Mean model evaluation is {}".format(mean_test))
+print('[INFO] printing model architecture and predictions...')
+
+# Saving the model and printing the architecture of the model
 model.save('{}model.model'.format(model_out))
 plot_model(model, to_file='{}model.png'.format(model_out), show_layer_names=True,
     show_shapes=True)
 
-predictions = model.predict(testX)
-predictions = np.hstack((predictions, testY))
+# Saving the predictions of the model from the last iteration
+predictions = np.hstack((predicted_test_scaled, testY_scaled))
 np.savetxt('{}predictions.txt'.format(model_out), predictions, delimiter='     ', fmt='%.2f')
 
 
 print('[INFO] ploting scatter plot of predictions...')
+
+# Ploting the scatter plot of predictions for R
 plt.figure()
-plt.plot(testY[:, 0], predictions[:, 0], 'b.', markersize = 1)
+plt.plot(testY_scaled[:, 0], predictions[:, 0], 'b.', markersize = 1)
 plt.plot([1000, 5000], [1000, 5000], 'r')
 plt.xlim((500, 5500))
 plt.ylim((500, 5500))
@@ -192,8 +247,9 @@ plt.title("Predicted vs Real R")
 plt.legend()
 plt.savefig('{}pred_vs_realR.png'.format(model_out))
 
+#Ploting the scatter plot of prediction for H
 plt.figure()
-plt.plot(testY[:,1], predictions[:, 1], 'b.', markersize = 1)
+plt.plot(testY_scaled[:,1], predictions[:, 1], 'b.', markersize = 1)
 plt.plot([100, 10000], [100, 10000], 'r')
 plt.xlim((-400, 10500))
 plt.ylim((-400, 10500))
@@ -204,6 +260,8 @@ plt.legend()
 plt.savefig('{}pred_vs_realH.png'.format(model_out))
 
 print('[INFO] ploting loss...')
+
+#Ploting the loss function from the last iteration
 plt.figure()
 plt.plot(epochs, H.history['loss'], label = 'loss_training')
 plt.plot(epochs, H.history['val_loss'], label = 'loss_cv')

@@ -27,8 +27,6 @@ def get_image_for_model(image):
     row_end = center[1] + 101
     col_start = center[0] - 100
     col_end = center[0] + 101
-
-    print(row_start, row_end, col_start, col_end)
     
     new_image = image[row_start:row_end, col_start:col_end]
     
