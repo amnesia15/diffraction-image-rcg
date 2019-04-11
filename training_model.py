@@ -128,6 +128,20 @@ mae_hist_test = []
 mse_hist_training = []
 mse_hist_test = []
 
+mae_error = {
+    'r_test': [],
+    'h_test': [],
+    'r_training': [],
+    'h_training': []
+}
+
+mse_error = {
+    'r_test': [],
+    'h_test': [],
+    'r_training': [],
+    'h_training': []
+}
+
 earlystop = EarlyStopping(monitor="val_mean_absolute_error", min_delta=0.0001, patience=5,
     verbose=1, mode="auto")
 
@@ -160,6 +174,8 @@ for i in range(0, ITERATIONS):
     testY_scaled = sc.inverse_transform(testY)
     trainY_scaled = sc.inverse_transform(trainY)
 
+    print("SHAPE testY_scaled {} and SHAPE predicted_test_scaled {}".format(testY_scaled.shape, predicted_test_scaled.shape))
+
     # Calculating the mean absolute error
     current_mae_test = mean_absolute_error(testY_scaled, predicted_test_scaled)
     current_mae_training = mean_absolute_error(trainY_scaled, predicted_training_scaled) 
@@ -174,6 +190,20 @@ for i in range(0, ITERATIONS):
     mse_hist_test.append(current_mse_test)
     mse_hist_training.append(current_mse_training)
 
+    # Calculating the mean absolute error for R and H for test and training set
+
+    mae_error['r_test'].append(mean_absolute_error(testY_scaled[:, 0], predicted_test_scaled[:, 0]))
+    mae_error['h_test'].append(mean_absolute_error(testY_scaled[:, 1], predicted_test_scaled[:, 1]))
+    mae_error['r_training'].append(mean_absolute_error(trainY_scaled[:, 0], predicted_training_scaled[:, 0]))
+    mae_error['h_training'].append(mean_absolute_error(trainY_scaled[:, 1], predicted_training_scaled[:, 1]))
+
+    # Calculating the mean squared error for R and H for test and training set
+
+    mse_error['r_test'].append(mean_squared_error(testY_scaled[:, 0], predicted_test_scaled[:, 0]))
+    mse_error['h_test'].append(mean_squared_error(testY_scaled[:, 1], predicted_test_scaled[:, 1]))
+    mse_error['r_training'].append(mean_squared_error(trainY_scaled[:, 0], predicted_training_scaled[:, 0]))
+    mse_error['h_training'].append(mean_squared_error(trainY_scaled[:, 1], predicted_training_scaled[:, 1]))
+
 
 
 # Converting the list to numpy array
@@ -183,6 +213,15 @@ mae_hist_training = np.array(mae_hist_training)
 mse_hist_test = np.array(mse_hist_test)
 mse_hist_training = np.array(mse_hist_training)
 
+mae_error['r_test'] = np.array(mae_error['r_test'])
+mae_error['h_test'] = np.array(mae_error['h_test'])
+mae_error['r_training'] = np.array(mae_error['r_training'])
+mae_error['h_training'] = np.array(mae_error['h_training']) 
+
+mse_error['r_test'] = np.array(mse_error['r_test'])
+mse_error['h_test'] = np.array(mse_error['h_test'])
+mse_error['r_training'] = np.array(mse_error['r_training'])
+mse_error['h_training'] = np.array(mse_error['h_training'])
 
 
 # Calculating the mean value for the errors
@@ -192,6 +231,16 @@ mean_mae_training = np.mean(mae_hist_training)
 mean_mse_test = np.mean(mse_hist_test)
 mean_mse_training = np.mean(mse_hist_training)
 
+mae_error['r_test_mean'] = np.mean(mae_error['r_test'])
+mae_error['h_test_mean'] = np.mean(mae_error['h_test'])
+mae_error['r_training_mean'] = np.mean(mae_error['r_training'])
+mae_error['h_training_mean'] = np.mean(mae_error['h_training'])
+
+mse_error['r_test_mean'] = np.mean(mse_error['r_test'])
+mse_error['h_test_mean'] = np.mean(mse_error['h_test'])
+mse_error['r_training_mean'] = np.mean(mse_error['r_training'])
+mse_error['h_training_mean'] = np.mean(mse_error['h_training'])
+
 # Calculating the standard deviation for the errors
 std_mae_test = np.std(mae_hist_test)
 std_mae_training = np.std(mae_hist_training)
@@ -199,13 +248,38 @@ std_mae_training = np.std(mae_hist_training)
 std_mse_test = np.std(mse_hist_test)
 std_mse_training = np.std(mse_hist_training)
 
+mae_error['r_test_std'] = np.std(mae_error['r_test'])
+mae_error['h_test_std'] = np.std(mae_error['h_test'])
+mae_error['r_training_std'] = np.std(mae_error['r_training'])
+mae_error['h_training_std'] = np.std(mae_error['h_training'])
+
+mse_error['r_test_std'] = np.std(mse_error['r_test'])
+mse_error['h_test_std'] = np.std(mse_error['h_test'])
+mse_error['r_training_std'] = np.std(mse_error['r_training'])
+mse_error['h_training_std'] = np.std(mse_error['h_training'])
+
+
 print("[INFO] printing descriptive statistics...")
 
 file_stat = open('{}stats.txt'.format(model_out), 'w')
-file_stat.write("MAE_train = {}  STD_train = {}\n".format(mean_mae_training, std_mae_training))
-file_stat.write("MAE_test = {}  STD_test = {}\n".format(mean_mae_test, std_mae_test))
+file_stat.write("MAE_train = {}\t STD_train = {}\n".format(mean_mae_training, std_mae_training))
+file_stat.write("MAE_test = {}\t STD_test = {}\n".format(mean_mae_test, std_mae_test))
+file_stat.write('-----------------------------------\n')
+file_stat.write("MAE_train (R) = {}\t STD_train (R) = {}\n".format(mae_error['r_training_mean'], mae_error['r_training_std']))
+file_stat.write("MAE_train (H) = {}\t STD_train (H) = {}\n".format(mae_error['h_training_mean'], mae_error['h_training_std']))
+file_stat.write("MAE_test (R) = {}\t STD_test (R) = {}\n".format(mae_error['r_test_mean'], mae_error['r_test_std']))
+file_stat.write("MAE_test (H) = {}\t STD_test (H) = {}\n".format(mae_error['h_test_mean'], mae_error['h_test_std']))
+
+file_stat.write('\n************************************\n\n')
+
 file_stat.write("MSE_train = {}  STD_train = {}\n".format(mean_mse_training, std_mse_training))
 file_stat.write("MSE_test = {}  STD_test = {}\n".format(mean_mse_test, std_mse_test))
+file_stat.write('-----------------------------------\n')
+file_stat.write("MSE_train (R) = {}\t STD_train (R) = {}\n".format(mse_error['r_training_mean'], mse_error['r_training_std']))
+file_stat.write("MSE_train (H) = {}\t STD_train (H) = {}\n".format(mse_error['h_training_mean'], mse_error['h_training_std']))
+file_stat.write("MSE_test (R) = {}\t STD_test (R) = {}\n".format(mse_error['r_test_mean'], mse_error['r_test_std']))
+file_stat.write("MSE_test (H) = {}\t STD_test (H) = {}\n".format(mse_error['h_test_mean'], mse_error['h_test_std']))
+
 file_stat.close()
 
 # Ploting the training plot for the last iteration
