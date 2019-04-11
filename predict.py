@@ -14,6 +14,9 @@ ap.add_argument('-ds', '--data_scaler', required = False,
 ap.add_argument('-ps', '--params_scaler', required = False,
     default = "model_output/params.scaler",
     help = 'path to load scalar for output variables')
+ap.add_argument("-mo", "--model_output", required = False,
+    default = "model_output/",
+    help = "path for model outputs")
 args = vars(ap.parse_args())
 
 path_params_scalar = args['params_scaler']
@@ -42,5 +45,4 @@ print(text)
 output = image.copy()
 cv2.putText(output, text, (15, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.4,
    (255, 255, 0), 1)
-#cv2.imshow("Image", output)
-cv2.imwrite("prediction_output.png", output)
+cv2.imwrite("{}prediction_output.png".format(args['model_output']), output)
