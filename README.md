@@ -1,6 +1,6 @@
 # Diffraction Image Parameter Recognition
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.6|2.7](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![Python 3.6 | 2.7](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
 [![Python 2.7](https://img.shields.io/badge/python-2.7-blue.svg)](https://www.python.org/downloads/release/python-270/)
 
 U ovom radu je razvijen model za odredjivanje parametara tragova u dozimetriji. Dozimetrija je grana u fizici koja se bavi odredjivanjem apsorbovane doze jonizujuceg zracenja u materijalima. Za odredjivanje ove doze korisceni su trag detektori, tacnije detektor CR-39. Trag detektor se izlaze radijaciji a nakon toga se deteljno pregleda pod mikroskopom. Tragovi nuklearnih cestica mogu da prikazu razlicite informacije poput mase, energije i pravca kretanja cestica. Na osnovu difrakcionih slika pokazano je da se koriscenjem dubokog ucena mogu prepoznati parametri radijusa i dubine tragova sa zadovoljavajucom preciznoscu.
