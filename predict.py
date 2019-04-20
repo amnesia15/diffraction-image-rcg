@@ -1,3 +1,14 @@
+"""Script for predicting the params for the diffraction image.
+
+Args:
+    -p: Path to the image.
+    -ds: Path to the scalar for the features.
+    -ps: Path to the scalar for the output variables.
+    -mo: Path to the model outputs.
+
+Returns:
+    None. Saves the model prediction.
+"""
 from keras.models import load_model
 import cv2
 import argparse

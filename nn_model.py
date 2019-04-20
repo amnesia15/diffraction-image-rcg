@@ -5,9 +5,21 @@ from keras.initializers import glorot_normal
 from keras.layers import Dropout
 import numpy as np
 
-class NNModel(): 
+class NNModel():
+    """Class for the model."""
+
     @staticmethod
     def build(hidden_units, input_dimension, learning_rate):
+        """Builds the model with a given number of hidden units, input dimension and learning rate but without dropout.
+        
+        Args:
+            hidden_units: Number of hidden units per layer.
+            input_dimension: Number of neurons in the input layer.
+            learning_rate: Learning rate of the optimizator.
+        
+        Returns: 
+            The compiled model.
+        """
         model = Sequential()
 
         model.add(Dense(units = hidden_units[0], activation = 'relu', kernel_initializer = glorot_normal(),
@@ -25,6 +37,17 @@ class NNModel():
 
     @staticmethod
     def build_dropout(hidden_units, input_dimension, learning_rate, dropout_rate):
+        """Builds the model with a given number of hidden units, input dimension, learning and dropout rates.
+        
+        Args:
+            hidden_units: Number of hidden units per layer.
+            input_dimension: Number of neurons in the input layer.
+            learning_rate: Learning rate of the optimizator.
+            dropout_rate: Dropout rates per layer.
+
+        Returns: 
+            The compiled model.
+        """
         model = Sequential()
 
         model.add(Dense(units = hidden_units[0], activation = 'relu', kernel_initializer = glorot_normal(),

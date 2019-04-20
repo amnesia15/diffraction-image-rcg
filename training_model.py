@@ -1,4 +1,20 @@
 """ Script for training the model.
+
+Args:
+    -ip: Path to the directory that contains the input images.
+    -pp: Path to the directory that contains params of the images.
+    -e: Number of epochs for training.
+    -lr: Learning rate for the optimizer.
+    -i: Number of training iteration for the same architecture.
+    -hl: Number of units per hidden layer.
+    -mo: The directory for the outputs of the model.
+    -ts: Proportion of the dataset to be included in the test set.
+    -bs: Number of samples per gradient update.
+    -dr: Droupout rates per layer.
+    -r: Indicator for regularization usage (0 - no regularization, 1 - dropout method).
+    -es: Indicator for early stopping usage (0 - no early stopping, 1 - using early stopping).
+Returns:
+    None. Saves the model and the corresponding training data for the model.
 """
 
 import cv2

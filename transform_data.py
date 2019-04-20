@@ -1,3 +1,11 @@
+"""Script for transforming the output from the Fortan modeling program to the txt file that contains pixels.
+
+Args:
+    -dp: path to the directory that contains raw data.
+    -op: path to the directory where we want to output the transformed data.
+Returns:
+    None. Saves the transformed data.
+"""
 import numpy as np
 import cv2
 import argparse
