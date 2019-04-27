@@ -38,6 +38,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 import time
+import pandas as pd
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-ip", "--image_path", required = False,
@@ -293,6 +294,47 @@ rmse_error['r_training_std'] = np.std(rmse_error['r_training'])
 rmse_error['h_training_std'] = np.std(rmse_error['h_training'])
 
 
+# Creating CSV file with mean absolute errors and root mean squared erros for every iteration
+
+errors_arr = np.vstack((mae_hist_training, mae_hist_test, rmse_hist_training, rmse_hist_test,
+    mae_error['r_training'], mae_error['r_test'], mae_error['h_training'], mae_error['h_test'],
+    rmse_error['r_training'], rmse_error['r_test'], rmse_error['h_training'], rmse_error['h_test']))
+errors_arr = errors_arr.T
+errors_df = pd.DataFrame(errors_arr)
+errors_df.columns = ['MAE training', 'MAE test', 'RMSE training', 'RMSE test',
+    'MAE R training', 'MAE R test', 'MAE H training', 'MAE H test',
+    'RMSE R training', 'RMSE R test', 'RMSE H training', 'RMSE H test']
+errors_df.to_csv('{}errors.csv'.format(model_out))
+
+
+# Creating a CSV file for MAEs
+
+r_list = [mae_error['r_training_mean'], mae_error['r_test_mean'],
+    mae_error['r_training_std'], mae_error['r_test_std']]
+h_list = [mae_error['h_training_mean'], mae_error['h_test_mean'],
+    mae_error['h_training_std'], mae_error['h_test_std']]
+both_list = [mean_mae_training, mean_mae_test, std_mae_training, std_mae_test]
+
+maes_df = pd.DataFrame(np.array((r_list, h_list, both_list)))
+maes_df.columns = ['mean training', 'mean test', 'std training', 'std test']
+maes_df.rename(index={0:'radius', 1:'depth', 2:'both'}, inplace=True)
+maes_df.to_csv('{}maes.csv'.format(model_out))
+
+# Creating a CSV file for RMSEs
+
+r_list = [rmse_error['r_training_mean'], rmse_error['r_test_mean'],
+    rmse_error['r_training_std'], rmse_error['r_test_std']]
+h_list = [rmse_error['h_training_mean'], rmse_error['h_test_mean'],
+    rmse_error['h_training_std'], rmse_error['h_test_std']]
+both_list = [mean_rmse_training, mean_rmse_test, std_rmse_training, std_rmse_test]
+
+rmaes_df = pd.DataFrame(np.array((r_list, h_list, both_list)))
+maes_df.columns = ['mean training', 'mean test', 'std training', 'std test']
+maes_df.rename(index={0:'radius', 1:'depth', 2:'both'}, inplace=True)
+rmaes_df.to_csv('{}rmses.csv'.format(model_out))
+
+
+# Printing descriptive statistics in a human friendly format
 print("[INFO] printing descriptive statistics...")
 
 file_stat = open('{}stats.txt'.format(model_out), 'w')
@@ -381,4 +423,7 @@ plt.savefig('{}loss_func.png'.format(model_out))
 
 print('Running times {}'.format(times))
 times = np.array(times)
+running_times_df = pd.DataFrame(times.T)
+running_times_df.columns = ['running times']
+running_times_df.to_csv('{}running_times.csv'.format(model_out))
 print('Average running time {}'.format(np.mean(times)))
