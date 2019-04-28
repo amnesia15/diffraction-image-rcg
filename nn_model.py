@@ -9,24 +9,25 @@ class NNModel():
     """Class for the model."""
 
     @staticmethod
-    def build(hidden_units, input_dimension, learning_rate):
-        """Builds the model with a given number of hidden units, input dimension and learning rate but without dropout.
+    def build(hidden_units, input_dimension, learning_rate, activation_func):
+        """Builds the model with a given number of hidden units, input dimension, activation function and learning rate but without dropout.
         
         Args:
             hidden_units: Number of hidden units per layer.
             input_dimension: Number of neurons in the input layer.
             learning_rate: Learning rate of the optimizator.
+            activation_func: The name of activation function.
         
         Returns: 
             The compiled model.
         """
         model = Sequential()
 
-        model.add(Dense(units = hidden_units[0], activation = 'relu', kernel_initializer = glorot_normal(),
+        model.add(Dense(units = hidden_units[0], activation = activation_func, kernel_initializer = glorot_normal(),
             input_dim = input_dimension))
         
         for i in range(1, hidden_units.size):
-            model.add(Dense(units = hidden_units[i], activation = 'relu', 
+            model.add(Dense(units = hidden_units[i], activation = activation_func, 
                 kernel_initializer = glorot_normal()))
 
         model.add(Dense(units = 2))    
@@ -36,27 +37,28 @@ class NNModel():
         return model
 
     @staticmethod
-    def build_dropout(hidden_units, input_dimension, learning_rate, dropout_rate):
-        """Builds the model with a given number of hidden units, input dimension, learning and dropout rates.
+    def build_dropout(hidden_units, input_dimension, learning_rate, dropout_rate, activation_func):
+        """Builds the model with a given number of hidden units, input dimension, learning rates, dropout rates and activation function.
         
         Args:
             hidden_units: Number of hidden units per layer.
             input_dimension: Number of neurons in the input layer.
             learning_rate: Learning rate of the optimizator.
             dropout_rate: Dropout rates per layer.
+            activation_func: The name of activation function.
 
         Returns: 
             The compiled model.
         """
         model = Sequential()
 
-        model.add(Dense(units = hidden_units[0], activation = 'relu', kernel_initializer = glorot_normal(),
+        model.add(Dense(units = hidden_units[0], activation = activation_func, kernel_initializer = glorot_normal(),
             input_dim = input_dimension))
 
         model.add(Dropout(dropout_rate[0]))
 
         for i in range(1, hidden_units.size):
-            model.add(Dense(units = hidden_units[i], activation = 'relu', 
+            model.add(Dense(units = hidden_units[i], activation = activation_func, 
                 kernel_initializer = glorot_normal()))
             model.add(Dropout(dropout_rate[i]))
 

@@ -13,6 +13,7 @@ Args:
     -dr: Droupout rates per layer.
     -r: Indicator for regularization usage (0 - no regularization, 1 - dropout method).
     -es: Indicator for early stopping usage (0 - no early stopping, 1 - using early stopping).
+    -a: The name of the activation function that will be used.
 Returns:
     None. Saves the model and the corresponding training data for the model.
 """
@@ -76,8 +77,10 @@ ap.add_argument("-r", "--regularization", required = False,
     help = "regularization (0 - no regularization, 1 - dropout method)")
 ap.add_argument('-es', '--early_stopping', required = False,
     default = 1,
-    help = 'early stopping (0 - no early stopping, 1 - using early stopping')
-
+    help = 'early stopping (0 - no early stopping, 1 - using early stopping)')
+ap.add_argument('-a', '--activation_func', required = False,
+    default = 'relu',
+    help = 'the name of the activation function (relu, tanh)')
 args = vars(ap.parse_args())
 
 dir_imgs = args['image_path']
@@ -102,6 +105,8 @@ BATCH_SIZE = int(args["batch_size"])
 REGULARIZATION = int(args["regularization"])
 
 LEARNING_RATE = float(args["learning_rate"])
+
+ACTIVATION_FUNC = args["activation_func"]
 
 data = []
 params = []
@@ -134,9 +139,9 @@ joblib.dump(sc, '{}params.scaler'.format(model_out))
 
 # Building the model with or without regularization
 if (REGULARIZATION == 0):
-    model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
+    model = NNModel.build(H_LAYERS, 101, LEARNING_RATE, ACTIVATION_FUNC)
 elif (REGULARIZATION == 1):
-    model = NNModel.build_dropout(H_LAYERS, 101, LEARNING_RATE, DROPOUT_RATES)
+    model = NNModel.build_dropout(H_LAYERS, 101, LEARNING_RATE, DROPOUT_RATES, ACTIVATION_FUNC)
 
 
 print("[INFO] printing model summary...")
@@ -185,9 +190,9 @@ for i in range(0, ITERATIONS):
     trainX, testX, trainY, testY = train_test_split(data, params, test_size = TEST_SPL)
 
     if (REGULARIZATION == 0):
-        model = NNModel.build(H_LAYERS, 101, LEARNING_RATE)
+        model = NNModel.build(H_LAYERS, 101, LEARNING_RATE, ACTIVATION_FUNC)
     elif (REGULARIZATION == 1):
-        model = NNModel.build_dropout(H_LAYERS, 101, LEARNING_RATE, DROPOUT_RATES)
+        model = NNModel.build_dropout(H_LAYERS, 101, LEARNING_RATE, DROPOUT_RATES, ACTIVATION_FUNC)
 
     print('[INFO] training model...')
 
