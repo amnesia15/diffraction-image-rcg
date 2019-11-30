@@ -1,12 +1,12 @@
 """Script for predicting the params for the diffraction image.
 
-Args:
+# Args
     -p: Path to the image.
     -ds: Path to the scalar for the features.
     -ps: Path to the scalar for the output variables.
     -mo: Path to the model outputs.
 
-Returns:
+# Returns
     None. Saves the model prediction.
 """
 from keras.models import load_model
@@ -17,17 +17,21 @@ from finding_center import get_image_for_model
 from sklearn.externals import joblib
 
 ap = argparse.ArgumentParser()
-ap.add_argument('-p', '--path', required = True,
-    help = 'path to load image')
-ap.add_argument('-ds', '--data_scaler', required = False,
-    default = "model_output/data.scaler",
-    help = 'path to scalar for features')
-ap.add_argument('-ps', '--params_scaler', required = False,
-    default = "model_output/params.scaler",
-    help = 'path to load scalar for output variables')
-ap.add_argument("-mo", "--model_output", required = False,
-    default = "model_output/",
-    help = "path for model outputs")
+ap.add_argument('-p', '--path',
+                required=True,
+                help='path to load image')
+ap.add_argument('-ds', '--data_scaler',
+                required=False,
+                default='model_output/data.scaler',
+                help='path to scalar for features')
+ap.add_argument('-ps', '--params_scaler',
+                required=False,
+                default='model_output/params.scaler',
+                help='path to load scalar for output variables')
+ap.add_argument('-mo', '--model_output',
+                required=False,
+                default='model_output/',
+                help='path for model outputs')
 args = vars(ap.parse_args())
 
 path_params_scalar = args['params_scaler']
@@ -54,6 +58,11 @@ print('[INFO] showing image...')
 text = "R = {0:.2f} H = {1:.2f}".format(preds[0, 0], preds[0, 1])
 print(text)
 output = image.copy()
-cv2.putText(output, text, (15, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.4,
-   (255, 255, 0), 1)
+cv2.putText(output,
+            text,
+            (15, 15),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.4,
+            (255, 255, 0),
+            1)
 cv2.imwrite("{}prediction_output.png".format(args['model_output']), output)
