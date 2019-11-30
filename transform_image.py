@@ -34,7 +34,7 @@ def add_padding(side, number, image):
 
     if number < 0:
         raise ValueError('number argument cannot be less than 0')
-                                 
+
     if (side == 1):
         zeros = np.zeros((number, image.shape[1]), dtype=np.uint8)
         image = np.vstack((zeros, image))
