@@ -20,7 +20,7 @@ jobs:
     - name: Check code with pycodestyle
       run: |
         pip install pycodestyle
-        pycodestyle
+        pycodestyle .
     - name: Test with pytest
       run: |
         pip install pytest
