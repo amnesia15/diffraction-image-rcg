@@ -1,6 +1,6 @@
 """ Script for training the model.
 
-Args:
+# Args
     -ip: Path to the directory that contains the input images.
     -pp: Path to the directory that contains params of the images.
     -e: Number of epochs for training.
@@ -11,15 +11,17 @@ Args:
     -ts: Proportion of the dataset to be included in the test set.
     -bs: Number of samples per gradient update.
     -dr: Droupout rates per layer.
-    -r: Indicator for regularization usage (0 - no regularization, 1 - dropout method).
-    -es: Indicator for early stopping usage (0 - no early stopping, 1 - using early stopping).
+    -r: Indicator for regularization usage (0 - no regularization,
+        1 - dropout method).
+    -es: Indicator for early stopping usage (0 - no early stopping,
+        1 - using early stopping).
     -a: The name of the activation function that will be used.
-Returns:
+# Returns
     None. Saves the model and the corresponding training data for the model.
 """
 
 import cv2
-import os 
+import os
 import numpy as np
 from keras.models import Sequential
 from keras.layers.core import Dense
@@ -42,45 +44,47 @@ import time
 import pandas as pd
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-ip", "--image_path", required = False,
-    default = "images/",
-    help = "path to input images")
-ap.add_argument("-pp", "--par_path", required = False,
-    default = "images/params/",
-    help = "path to input parameters of images (R, H)")
-ap.add_argument("-e", "--epochs", required = False,
-    default = 6000,
-    help = "number of epochs for training")
-ap.add_argument("-lr", "--learning_rate", required = False,
-    default = 0.00001,
-    help = "learning rate for optimizer")
-ap.add_argument("-i", "--iterations", required = False,
-    default = 1,
-    help = "number of training iteration for the same architecture")
-ap.add_argument("-hl", "--hidden_layers", required = False,
-    nargs = '+', default = [108, 55],
-    help = "number of units per hidden layer")
-ap.add_argument("-mo", "--model_output", required = False,
-    default = "model_output/",
-    help = "path for model outputs")
-ap.add_argument("-ts", "--test_split", required = False,
-    default = 0.2,
-    help = "proportion of the dataset to include in the test")
-ap.add_argument("-bs", "--batch_size", required = False,
-    default = 32,
-    help = "number of samples per gradient update")
-ap.add_argument("-dr", "--dropout_rates", required = False,
-    nargs = "+", default = [0.3, 0.1],
-    help = "droupout rates")
-ap.add_argument("-r", "--regularization", required = False,
-    default = 0,
-    help = "regularization (0 - no regularization, 1 - dropout method)")
-ap.add_argument('-es', '--early_stopping', required = False,
-    default = 1,
-    help = 'early stopping (0 - no early stopping, 1 - using early stopping)')
-ap.add_argument('-a', '--activation_func', required = False,
-    default = 'relu',
-    help = 'the name of the activation function (relu, tanh)')
+ap.add_argument('-ip', '--image_path', required=False,
+                default='images/',
+                help='path to input images')
+ap.add_argument('-pp', '--par_path', required=False,
+                default='images/params/',
+                help='path to input parameters of images (R, H)')
+ap.add_argument('-e', '--epochs', required=False,
+                default=6000,
+                help='number of epochs for training')
+ap.add_argument('-lr', '--learning_rate', required=False,
+                default=0.00001,
+                help='learning rate for optimizer')
+ap.add_argument('-i', '--iterations', required=False,
+                default=1,
+                help='number of training iteration for the same architecture')
+ap.add_argument('-hl', '--hidden_layers', required=False,
+                nargs='+', default=[108, 55],
+                help='number of units per hidden layer')
+ap.add_argument('-mo', '--model_output', required=False,
+                default='model_output/',
+                help='path for model outputs')
+ap.add_argument('-ts', '--test_split', required=False,
+                default=0.2,
+                help='proportion of the dataset to include in the test')
+ap.add_argument('-bs', '--batch_size', required=False,
+                default=32,
+                help='number of samples per gradient update')
+ap.add_argument('-dr', '--dropout_rates', required=False,
+                nargs='+', default=[0.3, 0.1],
+                help='droupout rates')
+ap.add_argument('-r', '--regularization', required=False,
+                default=0,
+                help='regularization (0 - no regularization, 1 - '
+                     'dropout method)')
+ap.add_argument('-es', '--early_stopping', required=False,
+                default=1,
+                help='early stopping (0 - no early stopping, 1 - '
+                     'using early stopping)')
+ap.add_argument('-a', '--activation_func', required=False,
+                default='relu',
+                help='the name of the activation function (relu, tanh)')
 args = vars(ap.parse_args())
 
 dir_imgs = args['image_path']
@@ -125,7 +129,7 @@ params = np.array(params)
 
 
 # Picking up features for a model
-data = data[ : ,100, 100:201]
+data = data[:, 100, 100:201]
 
 
 # Scaling the features and output to the range between 0 and 1
@@ -139,9 +143,16 @@ joblib.dump(sc, '{}params.scaler'.format(model_out))
 
 # Building the model with or without regularization
 if (REGULARIZATION == 0):
-    model = NNModel.build(H_LAYERS, 101, LEARNING_RATE, ACTIVATION_FUNC)
+    model = NNModel.build(H_LAYERS,
+                          101,
+                          LEARNING_RATE,
+                          ACTIVATION_FUNC)
 elif (REGULARIZATION == 1):
-    model = NNModel.build_dropout(H_LAYERS, 101, LEARNING_RATE, DROPOUT_RATES, ACTIVATION_FUNC)
+    model = NNModel.build_dropout(H_LAYERS,
+                                  101,
+                                  LEARNING_RATE,
+                                  DROPOUT_RATES,
+                                  ACTIVATION_FUNC)
 
 
 print("[INFO] printing model summary...")
@@ -174,8 +185,11 @@ rmse_error = {
     'h_training': []
 }
 
-earlystop = EarlyStopping(monitor="val_mean_absolute_error", min_delta=0.0001, patience=25,
-    verbose=1, mode="auto")
+earlystop = EarlyStopping(monitor="val_mean_absolute_error",
+                          min_delta=0.0001,
+                          patience=25,
+                          verbose=1,
+                          mode="auto")
 
 callback_list = []
 if ind_early_stopping:
@@ -187,23 +201,35 @@ for i in range(0, ITERATIONS):
     t_start = time.time()
     print('ITERATION #{}'.format(i))
     print("[INFO] spliting data...")
-    trainX, testX, trainY, testY = train_test_split(data, params, test_size = TEST_SPL)
+    trainX, testX, trainY, testY = train_test_split(data,
+                                                    params,
+                                                    test_size=TEST_SPL)
 
     if (REGULARIZATION == 0):
-        model = NNModel.build(H_LAYERS, 101, LEARNING_RATE, ACTIVATION_FUNC)
+        model = NNModel.build(H_LAYERS,
+                              101,
+                              LEARNING_RATE,
+                              ACTIVATION_FUNC)
     elif (REGULARIZATION == 1):
-        model = NNModel.build_dropout(H_LAYERS, 101, LEARNING_RATE, DROPOUT_RATES, ACTIVATION_FUNC)
+        model = NNModel.build_dropout(H_LAYERS,
+                                      101,
+                                      LEARNING_RATE,
+                                      DROPOUT_RATES,
+                                      ACTIVATION_FUNC)
 
     print('[INFO] training model...')
 
-    H = model.fit(trainX, trainY, validation_split=0.25, epochs=EPOCHS, verbose=1,
-        batch_size=BATCH_SIZE, callbacks=callback_list)
+    H = model.fit(trainX,
+                  trainY,
+                  validation_split=0.25,
+                  epochs=EPOCHS,
+                  verbose=1,
+                  batch_size=BATCH_SIZE,
+                  callbacks=callback_list)
 
-    
     # Predicting the R and H with the model
     predicted_test = model.predict(testX)
     predicted_training = model.predict(trainX)
-
 
     # Loading the normalizer and transforming the values back to normal range
     sc = joblib.load('{}params.scaler'.format(model_out))
@@ -213,12 +239,17 @@ for i in range(0, ITERATIONS):
     trainY_scaled = sc.inverse_transform(trainY)
 
     # Calculating the mean absolute error
-    current_mae_test = mean_absolute_error(testY_scaled, predicted_test_scaled)
-    current_mae_training = mean_absolute_error(trainY_scaled, predicted_training_scaled) 
+    current_mae_test = mean_absolute_error(testY_scaled,
+                                           predicted_test_scaled)
+    current_mae_training = mean_absolute_error(trainY_scaled,
+                                               predicted_training_scaled)
 
     # Calculating the root mean squared error
-    current_rmse_test = sqrt(mean_squared_error(testY_scaled, predicted_test_scaled))
-    current_rmse_training = sqrt(mean_squared_error(trainY_scaled, predicted_training_scaled))
+    current_rmse_test = sqrt(mean_squared_error(testY_scaled,
+                                                predicted_test_scaled))
+    current_rmse_training = \
+        sqrt(mean_squared_error(trainY_scaled,
+                                predicted_training_scaled))
 
     mae_hist_test.append(current_mae_test)
     mae_hist_training.append(current_mae_training)
@@ -228,23 +259,38 @@ for i in range(0, ITERATIONS):
 
     # Calculating the mean absolute error for R and H for test and training set
 
-    mae_error['r_test'].append(mean_absolute_error(testY_scaled[:, 0], predicted_test_scaled[:, 0]))
-    mae_error['h_test'].append(mean_absolute_error(testY_scaled[:, 1], predicted_test_scaled[:, 1]))
-    mae_error['r_training'].append(mean_absolute_error(trainY_scaled[:, 0], predicted_training_scaled[:, 0]))
-    mae_error['h_training'].append(mean_absolute_error(trainY_scaled[:, 1], predicted_training_scaled[:, 1]))
+    mae_error['r_test'].append(mean_absolute_error(
+                                    testY_scaled[:, 0],
+                                    predicted_test_scaled[:, 0]))
+    mae_error['h_test'].append(mean_absolute_error(
+                                    testY_scaled[:, 1],
+                                    predicted_test_scaled[:, 1]))
+    mae_error['r_training'].append(mean_absolute_error(
+                                        trainY_scaled[:, 0],
+                                        predicted_training_scaled[:, 0]))
+    mae_error['h_training'].append(mean_absolute_error(
+                                        trainY_scaled[:, 1],
+                                        predicted_training_scaled[:, 1]))
 
-    # Calculating the root mean squared error for R and H for test and training set
+    # Calculating the root mean squared error for R and H
+    # for test and training set
 
-    rmse_error['r_test'].append(sqrt(mean_squared_error(testY_scaled[:, 0], predicted_test_scaled[:, 0])))
-    rmse_error['h_test'].append(sqrt(mean_squared_error(testY_scaled[:, 1], predicted_test_scaled[:, 1])))
-    rmse_error['r_training'].append(sqrt(mean_squared_error(trainY_scaled[:, 0], predicted_training_scaled[:, 0])))
-    rmse_error['h_training'].append(sqrt(mean_squared_error(trainY_scaled[:, 1], predicted_training_scaled[:, 1])))
+    rmse_error['r_test'].append(sqrt(mean_squared_error(
+                                        testY_scaled[:, 0],
+                                        predicted_test_scaled[:, 0])))
+    rmse_error['h_test'].append(sqrt(mean_squared_error(
+                                        testY_scaled[:, 1],
+                                        predicted_test_scaled[:, 1])))
+    rmse_error['r_training'].append(sqrt(mean_squared_error(
+                                            trainY_scaled[:, 0],
+                                            predicted_training_scaled[:, 0])))
+    rmse_error['h_training'].append(sqrt(mean_squared_error(
+                                            trainY_scaled[:, 1],
+                                            predicted_training_scaled[:, 1])))
 
     t_end = time.time()
 
     times.append(t_end - t_start)
-
-
 
 # Converting the list to numpy array
 mae_hist_test = np.array(mae_hist_test)
@@ -256,7 +302,7 @@ rmse_hist_training = np.array(rmse_hist_training)
 mae_error['r_test'] = np.array(mae_error['r_test'])
 mae_error['h_test'] = np.array(mae_error['h_test'])
 mae_error['r_training'] = np.array(mae_error['r_training'])
-mae_error['h_training'] = np.array(mae_error['h_training']) 
+mae_error['h_training'] = np.array(mae_error['h_training'])
 
 rmse_error['r_test'] = np.array(rmse_error['r_test'])
 rmse_error['h_test'] = np.array(rmse_error['h_test'])
@@ -299,43 +345,65 @@ rmse_error['r_training_std'] = np.std(rmse_error['r_training'])
 rmse_error['h_training_std'] = np.std(rmse_error['h_training'])
 
 
-# Creating CSV file with mean absolute errors and root mean squared erros for every iteration
+# Creating CSV file with mean absolute errors and root mean
+# squared erros for every iteration
 
-errors_arr = np.vstack((mae_hist_training, mae_hist_test, rmse_hist_training, rmse_hist_test,
-    mae_error['r_training'], mae_error['r_test'], mae_error['h_training'], mae_error['h_test'],
-    rmse_error['r_training'], rmse_error['r_test'], rmse_error['h_training'], rmse_error['h_test']))
+errors_arr = np.vstack((mae_hist_training,
+                        mae_hist_test,
+                        rmse_hist_training,
+                        rmse_hist_test,
+                        mae_error['r_training'],
+                        mae_error['r_test'],
+                        mae_error['h_training'],
+                        mae_error['h_test'],
+                        rmse_error['r_training'],
+                        rmse_error['r_test'],
+                        rmse_error['h_training'],
+                        rmse_error['h_test']))
 errors_arr = errors_arr.T
 errors_df = pd.DataFrame(errors_arr)
 errors_df.columns = ['MAE training', 'MAE test', 'RMSE training', 'RMSE test',
-    'MAE R training', 'MAE R test', 'MAE H training', 'MAE H test',
-    'RMSE R training', 'RMSE R test', 'RMSE H training', 'RMSE H test']
+                     'MAE R training', 'MAE R test', 'MAE H training',
+                     'MAE H test', 'RMSE R training', 'RMSE R test',
+                     'RMSE H training', 'RMSE H test']
 errors_df.to_csv('{}errors.csv'.format(model_out))
 
 
 # Creating a CSV file for MAEs
 
-r_list = [mae_error['r_training_mean'], mae_error['r_test_mean'],
-    mae_error['r_training_std'], mae_error['r_test_std']]
-h_list = [mae_error['h_training_mean'], mae_error['h_test_mean'],
-    mae_error['h_training_std'], mae_error['h_test_std']]
+r_list = [mae_error['r_training_mean'],
+          mae_error['r_test_mean'],
+          mae_error['r_training_std'],
+          mae_error['r_test_std']]
+h_list = [mae_error['h_training_mean'],
+          mae_error['h_test_mean'],
+          mae_error['h_training_std'],
+          mae_error['h_test_std']]
 both_list = [mean_mae_training, mean_mae_test, std_mae_training, std_mae_test]
 
 maes_df = pd.DataFrame(np.array((r_list, h_list, both_list)))
 maes_df.columns = ['mean training', 'mean test', 'std training', 'std test']
-maes_df.rename(index={0:'radius', 1:'depth', 2:'both'}, inplace=True)
+maes_df.rename(index={0: 'radius', 1: 'depth', 2: 'both'}, inplace=True)
 maes_df.to_csv('{}maes.csv'.format(model_out))
 
 # Creating a CSV file for RMSEs
 
-r_list = [rmse_error['r_training_mean'], rmse_error['r_test_mean'],
-    rmse_error['r_training_std'], rmse_error['r_test_std']]
-h_list = [rmse_error['h_training_mean'], rmse_error['h_test_mean'],
-    rmse_error['h_training_std'], rmse_error['h_test_std']]
-both_list = [mean_rmse_training, mean_rmse_test, std_rmse_training, std_rmse_test]
+r_list = [rmse_error['r_training_mean'],
+          rmse_error['r_test_mean'],
+          rmse_error['r_training_std'],
+          rmse_error['r_test_std']]
+h_list = [rmse_error['h_training_mean'],
+          rmse_error['h_test_mean'],
+          rmse_error['h_training_std'],
+          rmse_error['h_test_std']]
+both_list = [mean_rmse_training,
+             mean_rmse_test,
+             std_rmse_training,
+             std_rmse_test]
 
 rmaes_df = pd.DataFrame(np.array((r_list, h_list, both_list)))
 maes_df.columns = ['mean training', 'mean test', 'std training', 'std test']
-maes_df.rename(index={0:'radius', 1:'depth', 2:'both'}, inplace=True)
+maes_df.rename(index={0: 'radius', 1: 'depth', 2: 'both'}, inplace=True)
 rmaes_df.to_csv('{}rmses.csv'.format(model_out))
 
 
@@ -343,23 +411,47 @@ rmaes_df.to_csv('{}rmses.csv'.format(model_out))
 print("[INFO] printing descriptive statistics...")
 
 file_stat = open('{}stats.txt'.format(model_out), 'w')
-file_stat.write("MAE_train = {}\t STD_train = {}\n".format(mean_mae_training, std_mae_training))
-file_stat.write("MAE_test = {}\t STD_test = {}\n".format(mean_mae_test, std_mae_test))
+file_stat.write("MAE_train = {}\t STD_train = {}\n".format(
+    mean_mae_training,
+    std_mae_training))
+file_stat.write("MAE_test = {}\t STD_test = {}\n".format(
+    mean_mae_test,
+    std_mae_test))
 file_stat.write('-----------------------------------\n')
-file_stat.write("MAE_train (R) = {}\t STD_train (R) = {}\n".format(mae_error['r_training_mean'], mae_error['r_training_std']))
-file_stat.write("MAE_train (H) = {}\t STD_train (H) = {}\n".format(mae_error['h_training_mean'], mae_error['h_training_std']))
-file_stat.write("MAE_test (R) = {}\t STD_test (R) = {}\n".format(mae_error['r_test_mean'], mae_error['r_test_std']))
-file_stat.write("MAE_test (H) = {}\t STD_test (H) = {}\n".format(mae_error['h_test_mean'], mae_error['h_test_std']))
+file_stat.write("MAE_train (R) = {}\t STD_train (R) = {}\n".format(
+    mae_error['r_training_mean'],
+    mae_error['r_training_std']))
+file_stat.write("MAE_train (H) = {}\t STD_train (H) = {}\n".format(
+    mae_error['h_training_mean'],
+    mae_error['h_training_std']))
+file_stat.write("MAE_test (R) = {}\t STD_test (R) = {}\n".format(
+    mae_error['r_test_mean'],
+    mae_error['r_test_std']))
+file_stat.write("MAE_test (H) = {}\t STD_test (H) = {}\n".format(
+    mae_error['h_test_mean'],
+    mae_error['h_test_std']))
 
 file_stat.write('\n************************************\n\n')
 
-file_stat.write("RMSE_train = {}  STD_train = {}\n".format(mean_rmse_training, std_rmse_training))
-file_stat.write("RMSE_test = {}  STD_test = {}\n".format(mean_rmse_test, std_rmse_test))
+file_stat.write("RMSE_train = {}  STD_train = {}\n".format(
+    mean_rmse_training,
+    std_rmse_training))
+file_stat.write("RMSE_test = {}  STD_test = {}\n".format(
+    mean_rmse_test,
+    std_rmse_test))
 file_stat.write('-----------------------------------\n')
-file_stat.write("RMSE_train (R) = {}\t STD_train (R) = {}\n".format(rmse_error['r_training_mean'], rmse_error['r_training_std']))
-file_stat.write("RMSE_train (H) = {}\t STD_train (H) = {}\n".format(rmse_error['h_training_mean'], rmse_error['h_training_std']))
-file_stat.write("RMSE_test (R) = {}\t STD_test (R) = {}\n".format(rmse_error['r_test_mean'], rmse_error['r_test_std']))
-file_stat.write("RMSE_test (H) = {}\t STD_test (H) = {}\n".format(rmse_error['h_test_mean'], rmse_error['h_test_std']))
+file_stat.write("RMSE_train (R) = {}\t STD_train (R) = {}\n".format(
+    rmse_error['r_training_mean'],
+    rmse_error['r_training_std']))
+file_stat.write("RMSE_train (H) = {}\t STD_train (H) = {}\n".format(
+    rmse_error['h_training_mean'],
+    rmse_error['h_training_std']))
+file_stat.write("RMSE_test (R) = {}\t STD_test (R) = {}\n".format(
+    rmse_error['r_test_mean'],
+    rmse_error['r_test_std']))
+file_stat.write("RMSE_test (H) = {}\t STD_test (H) = {}\n".format(
+    rmse_error['h_test_mean'],
+    rmse_error['h_test_std']))
 
 file_stat.close()
 
@@ -368,8 +460,12 @@ print('[INFO] ploting mean absolute error...')
 epochs = np.arange(0, len(H.history['mean_absolute_error']))
 plt.style.use("ggplot")
 plt.figure()
-plt.plot(epochs, H.history['mean_absolute_error'], label = "mean_absolute_error_train")
-plt.plot(epochs, H.history['val_mean_absolute_error'], label = "mean_absolute_error_cv")
+plt.plot(epochs,
+         H.history['mean_absolute_error'],
+         label="mean_absolute_error_train")
+plt.plot(epochs,
+         H.history['val_mean_absolute_error'],
+         label="mean_absolute_error_cv")
 plt.title("Mean absolute error (training, cv)")
 plt.xlabel("Epoch")
 plt.ylabel("Mean absolute error")
@@ -380,31 +476,35 @@ print('[INFO] printing model architecture and predictions...')
 
 # Saving the model and printing the architecture of the model
 model.save('{}model.model'.format(model_out))
-plot_model(model, to_file='{}model.png'.format(model_out), show_layer_names=True,
-    show_shapes=True)
+plot_model(model,
+           to_file='{}model.png'.format(model_out),
+           show_layer_names=True,
+           show_shapes=True)
 
 # Saving the predictions of the model from the last iteration
 predictions = np.hstack((predicted_test_scaled, testY_scaled))
-np.savetxt('{}predictions.txt'.format(model_out), predictions, delimiter='     ', fmt='%.2f')
+np.savetxt('{}predictions.txt'.format(model_out),
+           predictions,
+           delimiter='     ', fmt='%.2f')
 
 
 print('[INFO] ploting scatter plot of predictions...')
 
 # Ploting the scatter plot of predictions for R
 plt.figure()
-plt.plot(testY_scaled[:, 0], predictions[:, 0], 'b.', markersize = 1)
+plt.plot(testY_scaled[:, 0], predictions[:, 0], 'b.', markersize=1)
 plt.plot([1000, 5000], [1000, 5000], 'r')
 plt.xlim((500, 5500))
 plt.ylim((500, 5500))
 plt.xlabel('Real R')
-plt.ylabel('Predicted R')    
+plt.ylabel('Predicted R')
 plt.title("Predicted vs Real R")
 plt.legend()
 plt.savefig('{}pred_vs_realR.png'.format(model_out))
 
-#Ploting the scatter plot of prediction for H
+# Ploting the scatter plot of prediction for H
 plt.figure()
-plt.plot(testY_scaled[:,1], predictions[:, 1], 'b.', markersize = 1)
+plt.plot(testY_scaled[:, 1], predictions[:, 1], 'b.', markersize=1)
 plt.plot([100, 10000], [100, 10000], 'r')
 plt.xlim((-400, 10500))
 plt.ylim((-400, 10500))
@@ -416,10 +516,10 @@ plt.savefig('{}pred_vs_realH.png'.format(model_out))
 
 print('[INFO] ploting loss...')
 
-#Ploting the loss function from the last iteration
+# Ploting the loss function from the last iteration
 plt.figure()
-plt.plot(epochs, H.history['loss'], label = 'loss_training')
-plt.plot(epochs, H.history['val_loss'], label = 'loss_cv')
+plt.plot(epochs, H.history['loss'], label='loss_training')
+plt.plot(epochs, H.history['val_loss'], label='loss_cv')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.title("Loss function (training, cv)")
