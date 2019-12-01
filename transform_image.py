@@ -58,7 +58,7 @@ if __name__ == '__main__':
                     required=True,
                     help='path to save image')
     ap.add_argument('-side', '--side',
-                    default=1,
+                    default='top',
                     help='sides to which pixels will be added (top - '
                          'upper side, right - right side, bottom - bottom '
                          'side and left - left side')
