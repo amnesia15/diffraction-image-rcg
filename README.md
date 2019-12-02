@@ -2,6 +2,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 2.7](https://img.shields.io/badge/python-2.7-blue.svg)](https://www.python.org/downloads/release/python-270/)
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![codecov](https://codecov.io/gh/amnesia15/diffraction-image-rcg/branch/master/graph/badge.svg)](https://codecov.io/gh/amnesia15/diffraction-image-rcg)
 
 U ovom radu je razvijen model za odredjivanje parametara tragova u dozimetriji. Dozimetrija je grana u fizici koja se bavi odredjivanjem apsorbovane doze jonizujuceg zracenja u materijalima. Za odredjivanje ove doze korisceni su trag detektori, tacnije detektor CR-39. Trag detektor se izlaze radijaciji a nakon toga se deteljno pregleda pod mikroskopom. Tragovi nuklearnih cestica mogu da prikazu razlicite informacije poput mase, energije i pravca kretanja cestica. Na osnovu difrakcionih slika pokazano je da se koriscenjem dubokog ucena mogu prepoznati parametri radijusa i dubine tragova sa zadovoljavajucom preciznoscu.
 
@@ -53,7 +54,7 @@ python training_model.py -ip images/ -pp images/params/ -e 6000 -lr 0.00001 -i 1
 ```
 
 Za vrsenje predikcije nad nekom slikom koristi se **predict.py** skripta. Skripta ima sledece parametre:
-* **-p** - putanju do slike 
+* **-p** - putanju do slike
 * **-ds** - putanju do binarnog fajla za scaler za odlike
 * **-ps** - putanju do binarnog fajla za scaler za izlazne varijable
 
@@ -62,7 +63,7 @@ Jedno pokretranje za predikciju izgleda:
 python predict.py -p images/SLIKA1.png
 ```
 
-Za isprobavanje razlicitih kombinacija arhitekture koristi se skripta **generate_architecture.py**. Skripta ima sledece parametre: 
+Za isprobavanje razlicitih kombinacija arhitekture koristi se skripta **generate_architecture.py**. Skripta ima sledece parametre:
 * **-ip** - putanja do ulaznih slika (podrazumevano **"images/"**)
 * **-pp** - putanja do ulaznih parametara slike (R, H) (podrazumevano **"images/params/"**)
 * **-e** - broj epoha za treniranje neuronske mreze (podrazumevano **50**)
