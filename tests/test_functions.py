@@ -5,6 +5,7 @@ import numpy as np
 import cv2
 from transform_image import add_padding
 from finding_center import find_center, prepare_model_image
+from nn_model import NNModel
 
 
 @pytest.fixture
@@ -82,3 +83,57 @@ def test_prepare_model_image(diffraction_image, diffraction_image_top_ext):
     image = prepare_model_image(diffraction_image_top_ext)
 
     assert np.array_equal(image, diffraction_image)
+
+
+def test_generate_combination_low_high():
+    depth = 3
+    low_no = 5
+    high_no = 7
+    values = NNModel.generate_combination_low_high(depth, low_no, high_no)
+
+    expected_values = np.asarray([[5, 5, 5],
+                                  [5, 5, 6],
+                                  [5, 5, 7],
+                                  [5, 6, 5],
+                                  [5, 6, 6],
+                                  [5, 6, 7],
+                                  [5, 7, 5],
+                                  [5, 7, 6],
+                                  [5, 7, 7],
+                                  [6, 5, 5],
+                                  [6, 5, 6],
+                                  [6, 5, 7],
+                                  [6, 6, 5],
+                                  [6, 6, 6],
+                                  [6, 6, 7],
+                                  [6, 7, 5],
+                                  [6, 7, 6],
+                                  [6, 7, 7],
+                                  [7, 5, 5],
+                                  [7, 5, 6],
+                                  [7, 5, 7],
+                                  [7, 6, 5],
+                                  [7, 6, 6],
+                                  [7, 6, 7],
+                                  [7, 7, 5],
+                                  [7, 7, 6],
+                                  [7, 7, 7]])
+
+    assert np.array_equal(values, expected_values)
+
+
+def test_generate_combination_low_high_different():
+    low_high_arr = np.asarray([[2, 5], [7, 8]])
+
+    values = NNModel.generate_combination_low_high_different(low_high_arr)
+
+    expected_values = np.asarray([[2, 7],
+                                  [2, 8],
+                                  [3, 7],
+                                  [3, 8],
+                                  [4, 7],
+                                  [4, 8],
+                                  [5, 7],
+                                  [5, 8]])
+
+    assert np.array_equal(values, expected_values)
