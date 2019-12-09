@@ -66,8 +66,8 @@ if __name__ == '__main__':
     f.close()
 
     save_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                        'data',
-                                        'parameter_space',
-                                        'color_plot.png'))
+                                             'data',
+                                             'parameter_space',
+                                             'color_plot.png'))
 
     plot_contour_plot(x, y, z, save_path)
