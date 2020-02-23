@@ -177,6 +177,118 @@ def run_tanh_4():
     return df
 
 
+@pytest.fixture
+def df1_relu():
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                        '..',
+                                        'visualization',
+                                        'data',
+                                        'errors',
+                                        '108-55 (relu)',
+                                        'model_output',
+                                        'errors.csv'))
+    df = pd.read_csv(path)
+    return df
+
+
+@pytest.fixture
+def df2_relu():
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                        '..',
+                                        'visualization',
+                                        'data',
+                                        'errors',
+                                        '200-50-25 (relu)',
+                                        'model_output',
+                                        'errors.csv'))
+    df = pd.read_csv(path)
+    return df
+
+
+@pytest.fixture
+def df3_relu():
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                        '..',
+                                        'visualization',
+                                        'data',
+                                        'errors',
+                                        '202-101-50-20 (relu)',
+                                        'model_output',
+                                        'errors.csv'))
+    df = pd.read_csv(path)
+    return df
+
+
+@pytest.fixture
+def df4_relu():
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                        '..',
+                                        'visualization',
+                                        'data',
+                                        'errors',
+                                        '2048-1024-1024-512-512-256 (relu)',
+                                        'model_output',
+                                        'errors.csv'))
+    df = pd.read_csv(path)
+    return df
+
+
+@pytest.fixture
+def df1_tanh():
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                        '..',
+                                        'visualization',
+                                        'data',
+                                        'errors',
+                                        '108-55 (tanh)',
+                                        'model_output',
+                                        'errors.csv'))
+    df = pd.read_csv(path)
+    return df
+
+
+@pytest.fixture
+def df2_tanh():
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                        '..',
+                                        'visualization',
+                                        'data',
+                                        'errors',
+                                        '200-50-25 (tanh)',
+                                        'model_output',
+                                        'errors.csv'))
+    df = pd.read_csv(path)
+    return df
+
+
+@pytest.fixture
+def df3_tanh():
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                        '..',
+                                        'visualization',
+                                        'data',
+                                        'errors',
+                                        '202-101-50-20 (tanh)',
+                                        'model_output',
+                                        'errors.csv'))
+    df = pd.read_csv(path)
+    return df
+
+
+@pytest.fixture
+def df4_tanh():
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                        '..',
+                                        'visualization',
+                                        'data',
+                                        'errors',
+                                        '2048-1024-1024-512-512-256 (tanh)',
+                                        'model_output',
+                                        'errors.csv'))
+    df = pd.read_csv(path)
+    return df
+
+
 def test_plot_contour_plot(x_values, y_values, z_values):
     path = 'color_plot.png'
     plot_contour_plot(x_values, y_values, z_values, path)
@@ -204,3 +316,25 @@ def test_plot_running_times(run_relu_1,
                        path)
     assert os.path.isfile(path)
     os.remove(path)
+
+
+def test_plot_mean_absolute_errors_barplot(df1_relu,
+                                           df2_relu,
+                                           df3_relu,
+                                           df4_relu,
+                                           df1_tanh,
+                                           df2_tanh,
+                                           df3_tanh,
+                                           df4_tanh):
+    save_path = 'mae_barplot.png'
+    plot_mean_absolute_errors_barplot(df1_relu,
+                                      df2_relu,
+                                      df3_relu,
+                                      df4_relu,
+                                      df1_tanh,
+                                      df2_tanh,
+                                      df3_tanh,
+                                      df4_relu,
+                                      save_path)
+    assert os.path.isfile(save_path)
+    os.remove(save_path)
