@@ -1,5 +1,6 @@
 *.pyc
 venv
+.vs
 #/images/*
 #!/images/SLIKA1.png
 #!/images/SLIKA138.png
