@@ -1,4 +1,4 @@
-name: Diffraction image recognition
+name: inspect-build
 
 on: [push]
 
@@ -20,7 +20,7 @@ jobs:
     - name: Check code with pycodestyle
       run: |
         pip install pycodestyle
-        pycodestyle .
+        pycodestyle . --max-line-length=100
     - name: Test with pytest
       run: |
         pip install pytest
