@@ -13,10 +13,10 @@ import argparse
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-dp", "--data_path", required=False,
-                default="images/raw_data/",
+                default="../images/raw_data/",
                 help="path to input data")
 ap.add_argument("-op", "--output_path", required=False,
-                default="output/",
+                default="./../output/",
                 help="path to output images")
 args = vars(ap.parse_args())
 

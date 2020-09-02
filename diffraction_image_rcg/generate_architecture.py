@@ -57,7 +57,7 @@ dir_params = args["par_path"]
 
 LIM_UNITS = [int(x) for x in args["units_limit"]]
 LIM_UNITS = np.array(LIM_UNITS)
-if (LIM_UNITS.size % 2 != 0):
+if LIM_UNITS.size % 2 != 0:
     print("-ul not multiple of 2")
     exit(1)
 LIM_UNITS = LIM_UNITS.reshape(LIM_UNITS.size / 2, 2)

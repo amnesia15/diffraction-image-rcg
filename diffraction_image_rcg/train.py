@@ -47,12 +47,12 @@ def set_parser_arguments(parser):
     """
     # Path to the image
     parser.add_argument('-ip', '--image_path', required=False,
-                        default='images/',
+                        default='../images/',
                         help='path to input images')
 
     # Path to the parameters of the images
     parser.add_argument('-pp', '--par_path', required=False,
-                        default='images/params/',
+                        default='../images/params/',
                         help='path to input parameters of images (R, H)')
 
     # Number of epochs for training
@@ -78,7 +78,7 @@ def set_parser_arguments(parser):
 
     # The directory for the outputs of the model.
     parser.add_argument('-mo', '--model_output', required=False,
-                        default='model_output/',
+                        default='../model_output/',
                         help='path for model outputs')
 
     # Proportion of the dataset to be included in the test set.

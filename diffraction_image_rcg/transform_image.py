@@ -33,13 +33,13 @@ def add_padding(image, side, number):
     if number < 0:
         raise ValueError('number argument cannot be less than 0')
 
-    if (side == 'top'):
+    if side == 'top':
         zeros = np.zeros((number, image.shape[1]), dtype=np.uint8)
         image = np.vstack((zeros, image))
-    elif (side == 'right'):
+    elif side == 'right':
         zeros = np.zeros((image.shape[0], number), dtype=np.uint8)
         image = np.hstack((image, zeros))
-    elif (side == 'bottom'):
+    elif side == 'bottom':
         zeros = np.zeros((number, image.shape[1]), dtype=np.uint8)
         image = np.vstack((image, zeros))
     elif side == 'left':

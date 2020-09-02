@@ -6,7 +6,7 @@ from keras.layers import Dropout
 import numpy as np
 
 
-class NNModel():
+class NNModel:
     """Class for the model."""
 
     @staticmethod
