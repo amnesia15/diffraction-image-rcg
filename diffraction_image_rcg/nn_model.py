@@ -26,30 +26,38 @@ class NNModel:
         """
         model = Sequential()
 
-        model.add(Dense(units=hidden_units[0],
-                        activation=activation_func,
-                        kernel_initializer=glorot_normal(),
-                        input_dim=input_dimension))
+        model.add(
+            Dense(
+                units=hidden_units[0],
+                activation=activation_func,
+                kernel_initializer=glorot_normal(),
+                input_dim=input_dimension,
+            )
+        )
 
         for i in range(1, hidden_units.size):
-            model.add(Dense(units=hidden_units[i],
-                            activation=activation_func,
-                            kernel_initializer=glorot_normal()))
+            model.add(
+                Dense(
+                    units=hidden_units[i],
+                    activation=activation_func,
+                    kernel_initializer=glorot_normal(),
+                )
+            )
 
         model.add(Dense(units=2))
 
-        model.compile(loss='mse',
-                      optimizer=Adam(lr=learning_rate),
-                      metrics=["mean_absolute_error"])
+        model.compile(
+            loss="mse",
+            optimizer=Adam(lr=learning_rate),
+            metrics=["mean_absolute_error"],
+        )
 
         return model
 
     @staticmethod
-    def build_dropout(hidden_units,
-                      input_dimension,
-                      learning_rate,
-                      dropout_rate,
-                      activation_func):
+    def build_dropout(
+        hidden_units, input_dimension, learning_rate, dropout_rate, activation_func
+    ):
         """Builds the model with a given number of hidden units,
         input dimension, learning rates, dropout rates and activation
         function.
@@ -66,24 +74,34 @@ class NNModel:
         """
         model = Sequential()
 
-        model.add(Dense(units=hidden_units[0],
-                        activation=activation_func,
-                        kernel_initializer=glorot_normal(),
-                        input_dim=input_dimension))
+        model.add(
+            Dense(
+                units=hidden_units[0],
+                activation=activation_func,
+                kernel_initializer=glorot_normal(),
+                input_dim=input_dimension,
+            )
+        )
 
         model.add(Dropout(dropout_rate[0]))
 
         for i in range(1, hidden_units.size):
-            model.add(Dense(units=hidden_units[i],
-                            activation=activation_func,
-                            kernel_initializer=glorot_normal()))
+            model.add(
+                Dense(
+                    units=hidden_units[i],
+                    activation=activation_func,
+                    kernel_initializer=glorot_normal(),
+                )
+            )
             model.add(Dropout(dropout_rate[i]))
 
         model.add(Dense(units=2))
 
-        model.compile(loss='mse',
-                      optimizer=Adam(lr=learning_rate),
-                      metrics=["mean_absolute_error"])
+        model.compile(
+            loss="mse",
+            optimizer=Adam(lr=learning_rate),
+            metrics=["mean_absolute_error"],
+        )
 
         return model
 
@@ -101,12 +119,12 @@ class NNModel:
             cur_numb = low_no
             size_i = 0
 
-            while (size_i < size):
+            while size_i < size:
                 for k in range(0, no_iterations):
                     cur_col.append(cur_numb)
                 size_i += no_iterations
                 cur_numb += 1
-                if (cur_numb > high_no):
+                if cur_numb > high_no:
                     cur_numb = low_no
 
             comb_list.append(cur_col)
@@ -131,24 +149,24 @@ class NNModel:
 
         size = low_high_arr[0, 1] - low_high_arr[0, 0] + 1
         for i in range(1, low_high_arr.shape[0]):
-            size *= (low_high_arr[i, 1] - low_high_arr[i, 0] + 1)
+            size *= low_high_arr[i, 1] - low_high_arr[i, 0] + 1
         size_i = 0
 
         for i in range(0, depth):
             no_iterations = 1
             for k in range(i + 1, depth):
-                no_iterations *= (low_high_arr[k, 1] - low_high_arr[k, 0] + 1)
+                no_iterations *= low_high_arr[k, 1] - low_high_arr[k, 0] + 1
 
             cur_col = []
             cur_numb = low_high_arr[i, 0]
             size_i = 0
 
-            while (size_i < size):
+            while size_i < size:
                 for k in range(0, no_iterations):
                     cur_col.append(cur_numb)
                 size_i += no_iterations
                 cur_numb += 1
-                if (cur_numb > low_high_arr[i, 1]):
+                if cur_numb > low_high_arr[i, 1]:
                     cur_numb = low_high_arr[i, 0]
 
             comb_list.append(cur_col)

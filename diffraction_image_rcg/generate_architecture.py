@@ -5,49 +5,74 @@ import numpy as np
 import argparse
 
 ap = argparse.ArgumentParser()
-ap.add_argument('-ip', '--image_path',
-                required=False,
-                default='images/',
-                help='path to input images')
-ap.add_argument('-pp', '--par_path',
-                required=False,
-                default='images/params/',
-                help='path to input parameters of images (R, H)')
-ap.add_argument('-e', '--epochs',
-                required=False,
-                default=50,
-                help='number of epochs for training')
-ap.add_argument('-lr', '--learning_rate',
-                required=False,
-                default=0.00001,
-                help='learning rate for optimizer')
-ap.add_argument('-mo', '--model_output',
-                required=False,
-                default='model_output/',
-                help='path for model outputs')
-ap.add_argument('-ul', '--units_limit',
-                required=False,
-                nargs='+',
-                default=[90, 110, 40, 60],
-                help='limits per hidden layer')
-ap.add_argument('-ts', '--test_split',
-                required=False,
-                default=0.2,
-                help='proportion of the dataset to include in the test')
-ap.add_argument('-bs', '--batch_size',
-                required=False,
-                default=32,
-                help='number of samples per gradient update')
-ap.add_argument('-dr', '--dropout_rates',
-                required=False,
-                nargs='+',
-                default=[0.3, 0.1],
-                help='droupout rates')
-ap.add_argument('-r', '--regularization',
-                required=False,
-                default=0,
-                help='regularization (0 - no regularization, '
-                     '1 - dropout method)')
+ap.add_argument(
+    "-ip",
+    "--image_path",
+    required=False,
+    default="images/",
+    help="path to input images",
+)
+ap.add_argument(
+    "-pp",
+    "--par_path",
+    required=False,
+    default="images/params/",
+    help="path to input parameters of images (R, H)",
+)
+ap.add_argument(
+    "-e", "--epochs", required=False, default=50, help="number of epochs for training"
+)
+ap.add_argument(
+    "-lr",
+    "--learning_rate",
+    required=False,
+    default=0.00001,
+    help="learning rate for optimizer",
+)
+ap.add_argument(
+    "-mo",
+    "--model_output",
+    required=False,
+    default="model_output/",
+    help="path for model outputs",
+)
+ap.add_argument(
+    "-ul",
+    "--units_limit",
+    required=False,
+    nargs="+",
+    default=[90, 110, 40, 60],
+    help="limits per hidden layer",
+)
+ap.add_argument(
+    "-ts",
+    "--test_split",
+    required=False,
+    default=0.2,
+    help="proportion of the dataset to include in the test",
+)
+ap.add_argument(
+    "-bs",
+    "--batch_size",
+    required=False,
+    default=32,
+    help="number of samples per gradient update",
+)
+ap.add_argument(
+    "-dr",
+    "--dropout_rates",
+    required=False,
+    nargs="+",
+    default=[0.3, 0.1],
+    help="droupout rates",
+)
+ap.add_argument(
+    "-r",
+    "--regularization",
+    required=False,
+    default=0,
+    help="regularization (0 - no regularization, " "1 - dropout method)",
+)
 
 args = vars(ap.parse_args())
 
@@ -82,7 +107,7 @@ for i in range(0, 1000):
     img_path = dir_imgs + "SLIKA" + str(i + 1) + ".png"
     image = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
     data.append(image)
-    param_path = dir_params + 'input' + str(i + 1) + '/INPUT.TXT'
+    param_path = dir_params + "input" + str(i + 1) + "/INPUT.TXT"
     params.append(np.loadtxt(param_path))
 
 data = np.array(data)
@@ -91,10 +116,9 @@ params = np.array(params)
 print("[INFO] creating models")
 
 data_x = data[:, 100, 100:201]
-trainX, testX, trainY, testY = train_test_split(data_x,
-                                                params,
-                                                test_size=TEST_SPL,
-                                                random_state=42)
+trainX, testX, trainY, testY = train_test_split(
+    data_x, params, test_size=TEST_SPL, random_state=42
+)
 
 # low_high_arr = np.array([90, 110, 40, 60, 15, 35]).reshape((3, 2))
 # low_high_arr = np.array([90, 110, 40, 60]).reshape((2, 2))
@@ -107,55 +131,83 @@ mae_hist_train = []
 mae_hist_cv = []
 mae_hist_test = []
 
-if (REGULARIZATION == 0):
-    model = NNModel.build(units[0, ], 101, LEARNING_RATE)
-elif (REGULARIZATION == 1):
-    model = NNModel.build_dropout(units[0, ],
-                                  101,
-                                  LEARNING_RATE,
-                                  DROPOUT_RATES)
+if REGULARIZATION == 0:
+    model = NNModel.build(
+        units[
+            0,
+        ],
+        101,
+        LEARNING_RATE,
+    )
+elif REGULARIZATION == 1:
+    model = NNModel.build_dropout(
+        units[
+            0,
+        ],
+        101,
+        LEARNING_RATE,
+        DROPOUT_RATES,
+    )
 
-H = model.fit(trainX,
-              trainY,
-              validation_split=0.25,
-              epochs=EPOCHS,
-              verbose=0,
-              batch_size=BATCH_SIZE)
-mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
-mae_hist_cv.append(H.history['val_mean_absolute_error'][EPOCHS - 1])
+H = model.fit(
+    trainX,
+    trainY,
+    validation_split=0.25,
+    epochs=EPOCHS,
+    verbose=0,
+    batch_size=BATCH_SIZE,
+)
+mae_hist_train.append(H.history["mean_absolute_error"][EPOCHS - 1])
+mae_hist_cv.append(H.history["val_mean_absolute_error"][EPOCHS - 1])
 mae_hist_test.append(model.evaluate(testX, testY)[1])
 
 best_mae = mae_hist_test[0]
-best_hidden = units[0, ]
+best_hidden = units[
+    0,
+]
 
 
 for i in range(1, units.shape[0]):
     print("Iteration no. {}".format(i))
-    if (REGULARIZATION == 0):
-        model = NNModel.build(units[0, ], 101, LEARNING_RATE)
-    elif (REGULARIZATION == 1):
-        model = NNModel.build_dropout(units[0, ],
-                                      101,
-                                      LEARNING_RATE,
-                                      DROPOUT_RATES)
+    if REGULARIZATION == 0:
+        model = NNModel.build(
+            units[
+                0,
+            ],
+            101,
+            LEARNING_RATE,
+        )
+    elif REGULARIZATION == 1:
+        model = NNModel.build_dropout(
+            units[
+                0,
+            ],
+            101,
+            LEARNING_RATE,
+            DROPOUT_RATES,
+        )
 
-    H = model.fit(trainX,
-                  trainY,
-                  validation_split=0.25,
-                  epochs=EPOCHS,
-                  verbose=0,
-                  batch_size=BATCH_SIZE)
+    H = model.fit(
+        trainX,
+        trainY,
+        validation_split=0.25,
+        epochs=EPOCHS,
+        verbose=0,
+        batch_size=BATCH_SIZE,
+    )
 
-    mae_hist_train.append(H.history['mean_absolute_error'][EPOCHS - 1])
-    mae_hist_cv.append(H.history['val_mean_absolute_error'][EPOCHS - 1])
+    mae_hist_train.append(H.history["mean_absolute_error"][EPOCHS - 1])
+    mae_hist_cv.append(H.history["val_mean_absolute_error"][EPOCHS - 1])
     mae_hist_test.append(model.evaluate(testX, testY)[1])
 
-    if (mae_hist_test[i] < best_mae):
+    if mae_hist_test[i] < best_mae:
         best_mae = mae_hist_test[i]
-        best_hidden = units[i, ]
+        best_hidden = units[
+            i,
+        ]
 
 
-file = open('{}best.txt'.format(args["model_output"]), 'w')
+file = open("{}best.txt".format(args["model_output"]), "w")
 file.write("Best mae: {}\n".format(best_mae))
 file.write("Hidden units: ")
 for i in range(0, best_hidden.size):

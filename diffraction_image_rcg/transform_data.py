@@ -12,12 +12,20 @@ import cv2
 import argparse
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-dp", "--data_path", required=False,
-                default="../images/raw_data/",
-                help="path to input data")
-ap.add_argument("-op", "--output_path", required=False,
-                default="./../output/",
-                help="path to output images")
+ap.add_argument(
+    "-dp",
+    "--data_path",
+    required=False,
+    default="../images/raw_data/",
+    help="path to input data",
+)
+ap.add_argument(
+    "-op",
+    "--output_path",
+    required=False,
+    default="./../output/",
+    help="path to output images",
+)
 args = vars(ap.parse_args())
 
 
@@ -45,8 +53,7 @@ img_mat = np.zeros((1000, 201, 201))
 
 for i in range(0, no_images):
     for j in range(0, data_indexes.shape[1]):
-        img_mat[i, data_indexes[i, j, 0], data_indexes[i, j, 1]] = \
-            data[i, j, 2]
+        img_mat[i, data_indexes[i, j, 0], data_indexes[i, j, 1]] = data[i, j, 2]
 
 for i in range(0, no_images):
     out_path = args["output_path"] + "SLIKA" + str(i + 1) + ".txt"

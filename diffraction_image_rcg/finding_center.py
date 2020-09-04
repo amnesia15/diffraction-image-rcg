@@ -62,25 +62,25 @@ def visualize_centroid(image):
     image = prepare_model_image(image)
     center = find_center(image)
     cv2.circle(image, (center[0], center[1]), 1, (255, 255, 255), -1)
-    cv2.putText(image,
-                "centroid",
-                (center[0] - 25, center[1] - 25),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.5,
-                (255, 255, 255),
-                1)
+    cv2.putText(
+        image,
+        "centroid",
+        (center[0] - 25, center[1] - 25),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.5,
+        (255, 255, 255),
+        1,
+    )
 
     cv2.imshow("Image", image)
     cv2.waitKey(5000)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument('-p', '--path',
-                    required=True,
-                    help='path to load image')
+    ap.add_argument("-p", "--path", required=True, help="path to load image")
     args = vars(ap.parse_args())
 
-    image = cv2.imread(args['path'], cv2.IMREAD_GRAYSCALE)
+    image = cv2.imread(args["path"], cv2.IMREAD_GRAYSCALE)
 
     visualize_centroid(image)
