@@ -2,8 +2,11 @@ import os
 import context
 import pytest
 import pandas as pd
-from visualization.plot import plot_contour_plot, \
-    plot_running_times, plot_mean_absolute_errors_barplot
+from diffraction_image_rcg.visualization.plot import (
+    plot_contour_plot,
+    plot_running_times,
+    plot_mean_absolute_errors_barplot,
+)
 
 
 @pytest.fixture
@@ -11,6 +14,7 @@ def x_values():
     x = []
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'parameter_space',
@@ -30,6 +34,7 @@ def y_values():
     y = []
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'parameter_space',
@@ -49,6 +54,7 @@ def z_values():
     z = []
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'parameter_space',
@@ -69,6 +75,7 @@ def z_values():
 def run_relu_1():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -83,6 +90,7 @@ def run_relu_1():
 def run_tanh_1():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -97,6 +105,7 @@ def run_tanh_1():
 def run_relu_2():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -111,6 +120,7 @@ def run_relu_2():
 def run_tanh_2():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -125,6 +135,7 @@ def run_tanh_2():
 def run_relu_3():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -139,6 +150,7 @@ def run_relu_3():
 def run_tanh_3():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -153,6 +165,7 @@ def run_tanh_3():
 def run_relu_4():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -167,6 +180,7 @@ def run_relu_4():
 def run_tanh_4():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -181,6 +195,7 @@ def run_tanh_4():
 def df1_relu():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -195,6 +210,7 @@ def df1_relu():
 def df2_relu():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -209,6 +225,7 @@ def df2_relu():
 def df3_relu():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -223,6 +240,7 @@ def df3_relu():
 def df4_relu():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -237,6 +255,7 @@ def df4_relu():
 def df1_tanh():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -251,6 +270,7 @@ def df1_tanh():
 def df2_tanh():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -265,6 +285,7 @@ def df2_tanh():
 def df3_tanh():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',
@@ -279,6 +300,7 @@ def df3_tanh():
 def df4_tanh():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                         '..',
+                                        'diffraction_image_rcg',
                                         'visualization',
                                         'data',
                                         'errors',

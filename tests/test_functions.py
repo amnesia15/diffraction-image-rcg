@@ -3,9 +3,9 @@ import context
 import pytest
 import numpy as np
 import cv2
-from transform_image import add_padding
-from finding_center import find_center, prepare_model_image
-from nn_model import NNModel
+from diffraction_image_rcg.transform_image import add_padding
+from diffraction_image_rcg.finding_center import find_center, prepare_model_image
+from diffraction_image_rcg.nn_model import NNModel
 
 
 @pytest.fixture
