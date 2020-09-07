@@ -26,7 +26,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from keras.utils import plot_model
-from nn_model import NNModel
+from diffraction_image_rcg.nn_model import NNModel
 import argparse
 from keras.callbacks import EarlyStopping
 from sklearn.preprocessing import MinMaxScaler

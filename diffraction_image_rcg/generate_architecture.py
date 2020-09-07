@@ -1,5 +1,5 @@
 from sklearn.model_selection import train_test_split
-from nn_model import NNModel
+from diffraction_image_rcg.nn_model import NNModel
 import cv2
 import numpy as np
 import argparse

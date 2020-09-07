@@ -13,7 +13,7 @@ from keras.models import load_model
 import cv2
 import argparse
 import numpy as np
-from finding_center import prepare_model_image
+from diffraction_image_rcg.finding_center import prepare_model_image
 from sklearn.externals import joblib
 
 ap = argparse.ArgumentParser()
