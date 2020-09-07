@@ -15,7 +15,7 @@ def dummy_image():
 @pytest.fixture
 def diffraction_image():
     path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "images", "SLIKA1.png")
+        os.path.join(os.path.dirname(__file__), "..", "resources", "images", "SLIKA1.png")
     )
     image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
 
@@ -25,7 +25,7 @@ def diffraction_image():
 @pytest.fixture
 def diffraction_image_top_ext():
     path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "images", "SLIKA1.png")
+        os.path.join(os.path.dirname(__file__), "..", "resources", "images", "SLIKA1.png")
     )
     image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     augmented_image = add_padding(image=image, side="top", number=20)

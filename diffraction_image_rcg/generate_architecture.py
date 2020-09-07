@@ -9,14 +9,14 @@ ap.add_argument(
     "-ip",
     "--image_path",
     required=False,
-    default="images/",
+    default="../resources/images/",
     help="path to input images",
 )
 ap.add_argument(
     "-pp",
     "--par_path",
     required=False,
-    default="images/params/",
+    default="../resources/images/params/",
     help="path to input parameters of images (R, H)",
 )
 ap.add_argument(
@@ -33,7 +33,7 @@ ap.add_argument(
     "-mo",
     "--model_output",
     required=False,
-    default="model_output/",
+    default="../resources/model_output/",
     help="path for model outputs",
 )
 ap.add_argument(

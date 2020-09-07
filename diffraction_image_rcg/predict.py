@@ -22,21 +22,21 @@ ap.add_argument(
     "-ds",
     "--data_scaler",
     required=False,
-    default="../model_output/data.scaler",
+    default="../resources/model_output/data.scaler",
     help="path to scalar for features",
 )
 ap.add_argument(
     "-ps",
     "--params_scaler",
     required=False,
-    default="../model_output/params.scaler",
+    default="../resources/model_output/params.scaler",
     help="path to load scalar for output variables",
 )
 ap.add_argument(
     "-mo",
     "--model_output",
     required=False,
-    default="../model_output/",
+    default="../resources/model_output/",
     help="path for model outputs",
 )
 args = vars(ap.parse_args())
@@ -54,7 +54,7 @@ sc_data = joblib.load(path_data_scalar)
 input_x = sc_data.transform(input_x)
 
 print("[INFO] loading model...")
-model = load_model("../model_output/model.model")
+model = load_model("../resources/model_output/model.model")
 
 print("[INFO] predicting...")
 preds = model.predict(input_x)

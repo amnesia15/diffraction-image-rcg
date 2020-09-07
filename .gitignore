@@ -6,7 +6,7 @@ venv
 #!/images/SLIKA1.png
 #!/images/SLIKA138.png
 #!/images/SLIKA963.png
-/images/raw_data/*
-!/images/raw_data/input1/
-!/images/raw_data/input138/
-!/images/raw_data/input963/
+/resources/images/raw_data/*
+!/resources/images/raw_data/input1/
+!/resources/images/raw_data/input138/
+!/resources/images/raw_data/input963/

@@ -50,7 +50,7 @@ def set_parser_arguments(parser):
         "-ip",
         "--image_path",
         required=False,
-        default="../images/",
+        default="../resources/images/",
         help="path to input images",
     )
 
@@ -59,7 +59,7 @@ def set_parser_arguments(parser):
         "-pp",
         "--par_path",
         required=False,
-        default="../images/params/",
+        default="../resources/images/params/",
         help="path to input parameters of images (R, H)",
     )
 
@@ -105,7 +105,7 @@ def set_parser_arguments(parser):
         "-mo",
         "--model_output",
         required=False,
-        default="../model_output/",
+        default="../resources/model_output/",
         help="path for model outputs",
     )
 
