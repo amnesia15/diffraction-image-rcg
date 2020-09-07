@@ -26,7 +26,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from keras.utils import plot_model
-from nn_model import NNModel
+from diffraction_image_rcg.nn_model import NNModel
 import argparse
 from keras.callbacks import EarlyStopping
 from sklearn.preprocessing import MinMaxScaler
@@ -50,7 +50,7 @@ def set_parser_arguments(parser):
         "-ip",
         "--image_path",
         required=False,
-        default="../images/",
+        default="../resources/images/",
         help="path to input images",
     )
 
@@ -59,7 +59,7 @@ def set_parser_arguments(parser):
         "-pp",
         "--par_path",
         required=False,
-        default="../images/params/",
+        default="../resources/images/params/",
         help="path to input parameters of images (R, H)",
     )
 
@@ -105,7 +105,7 @@ def set_parser_arguments(parser):
         "-mo",
         "--model_output",
         required=False,
-        default="../model_output/",
+        default="../resources/model_output/",
         help="path for model outputs",
     )
 
