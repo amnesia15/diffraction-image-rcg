@@ -1,8 +1,8 @@
-from keras.models import Sequential
-from keras.layers.core import Dense
-from keras.optimizers import Adam
-from keras.initializers import glorot_normal
-from keras.layers import Dropout
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.initializers import glorot_normal
+from tensorflow.keras.layers import Dropout
 import numpy as np
 
 

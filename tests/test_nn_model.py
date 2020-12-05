@@ -1,6 +1,6 @@
 import context
 import numpy as np
-from keras.models import Sequential
+from tensorflow.keras.models import Sequential
 
 from diffraction_image_rcg.nn_model import NNModel
 
@@ -82,7 +82,7 @@ def test_nn_model_build_dropout():
     input_dimension = 16
     learning_rate = 0.005
     activation_fun = "relu"
-    dropout_rate = np.asarray([10, 10])
+    dropout_rate = np.asarray([0.5, 0.5])
 
     # Act
     model = NNModel.build_dropout(
